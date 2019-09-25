@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">CheckList</string>
+    <string name="button_login">Login</string>
+    <string name="button_sign_up">Sign up</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="tv_create_account">Create Account</string>
+    <string name="tv_not_a_member">Not a member? </string>
+    <string name="tv_already_a_member">Already a member? </string>
+    <string name="username_hint">Username</string>
+    <string name="add">add Task</string>
+    <string name="task_title">Title</string>
+    <string name="task_description">Description</string>
+    <string name="task_state">Task State</string>
+    <string name="task_edit_image">Task edit image</string>
+    <string name="task_state_holder">Task state holder</string>
+    <string name="actionBar_title">Task Manager</string>
+
+    <string name="date_picker_title">Task date:</string>
+    <string name="time_picker_title">Task time:</string>
+
+    <string name="category_TODO">TODO</string>
+    <string name="category_DONE">DONE</string>
+    <string name="category_DOING">DOING</string>
+
+    <string name="task_title_hint">Please enter a title</string>
+    <string name="task_description_hint">Please enter your task description</string>
+
+    <string name="done_state">Done</string>
+    <string name="doing_state">Doing</string>
+    <string name="todo_state">ToDo</string>
+    <string name="button_edit">Edit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

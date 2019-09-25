@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:startColor="@color/cosmicFusionStart"
+                android:endColor="@color/cosmicFusionEnd"
+                android:centerColor="@color/cosmicFusionMiddle">
+            </gradient>
+            <corners android:topRightRadius="8dp"
+                android:topLeftRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:bottomRightRadius="8dp" >
+            </corners>
+            <stroke android:dashWidth="12dp" android:color="#B2FFFFFF" android:width="2dip" android:dashGap="6dp"/>
+            <padding android:top="8dp" android:bottom="8dp" android:left="8dp" android:right="8dp"/>
+        </shape>
+    </item>
+</selector>

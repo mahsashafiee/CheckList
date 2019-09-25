@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".controller.TaskDetailFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp">
+    <TextView
+        android:id="@+id/textview_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/task_title"
+        android:textSize="12sp"
+        android:layout_gravity="bottom|center_horizontal"
+        style="?android:listSeparatorTextViewStyle" />
+
+    <EditText
+        android:id="@+id/edittext_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:textSize="14sp"
+        android:hint="@string/task_title_hint"
+        android:paddingLeft="8dp" />
+
+    <TextView
+        android:id="@+id/textview_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/task_description"
+        android:textSize="12sp"
+        android:layout_marginTop="24dp"
+        style="?android:listSeparatorTextViewStyle" />
+
+        <EditText
+            android:id="@+id/edittext_description"
+            android:layout_width="match_parent"
+            android:paddingStart="8dp"
+            android:textSize="14sp"
+            android:layout_height="wrap_content"
+            android:hint="@string/task_description_hint"
+            android:paddingLeft="8dp" />
+
+    <Button
+        android:id="@+id/button_date"
+        android:layout_width="match_parent"
+        android:layout_marginTop="24dp"
+        android:textSize="14sp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"/>
+    <Button
+        android:id="@+id/button_time"
+        android:layout_width="match_parent"
+        android:textSize="14sp"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"/>
+
+    <CheckBox
+        android:id="@+id/checkbox_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"/>
+    </LinearLayout>
+
+</ScrollView>

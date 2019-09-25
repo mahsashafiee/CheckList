@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#57006D</color>
+    <color name="colorPrimaryDark">#2D003C</color>
+    <color name="colorAccent">#FFAA23</color>
+
+    <color name="cosmicFusionStart">#8DFF00FB</color>
+    <color name="cosmicFusionMiddle">#8B953AFC</color>
+    <color name="cosmicFusionEnd">#8D034AFD</color>
+
+    <color name="kingYnaStart">#FD3EBD</color>
+    <color name="kingYnaMiddle">#AA2AC7</color>
+    <color name="kingYnaEnd">#DD2511D5</color>
+
+    <color name="pink">#BD0062</color>
+
+    <color name="TaskColorPink">#FFA5C1</color>
+    <color name="TaskColorBlue">#89CEFF</color>
+    <color name="TaskColorYellow">#FFFFB0</color>
+    <color name="TaskColorGreen">#BDFF8B</color>
+    <color name="TaskColorPurple">#D190FF</color>
+    <color name="TaskColorOrange">#FFCA80</color>
+
+    <color name="velvetSunEnd">#FFFDF8</color>
+    <color name="velvetSunFirst">#FF988A</color>
+    <color name="colorRadioButton">#FF8074</color>
+
+
+    <color name="lightYellow">#FFFCF6</color>
+</resources>
