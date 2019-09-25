@@ -9,12 +9,29 @@
 
     <!-- TODO: Update blank fragment layout -->
 
-    <ImageView
+    <LinearLayout
+        android:id="@+id/task_not_found"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/iv_task_state_holder"
-        android:contentDescription="@string/task_state_holder"/>
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_gravity="center">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/not_found"
+            android:contentDescription="@string/task_state_holder"
+            android:layout_marginRight="16dp" />
+        <TextView
+            android:id="@+id/tv_task_not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textSize="18sp"
+            tools:text="No TODO Task Found!!"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"

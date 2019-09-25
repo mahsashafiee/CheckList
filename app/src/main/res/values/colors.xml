@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#57006D</color>
     <color name="colorPrimaryDark">#2D003C</color>
-    <color name="colorAccent">#FFAA23</color>
+    <color name="colorAccent">#EC970F</color>
 
     <color name="cosmicFusionStart">#8DFF00FB</color>
     <color name="cosmicFusionMiddle">#8B953AFC</color>

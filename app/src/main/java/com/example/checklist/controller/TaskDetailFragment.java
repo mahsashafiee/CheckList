@@ -35,13 +35,12 @@ import java.util.UUID;
  */
 public class TaskDetailFragment extends DialogFragment {
 
-    public static final String ARGS_TASK_UUID_FROM_LIST = "args_task_uuid_from_list";
-    public static final String ARGS_TASK_STATE_FROM_LIST = "args_task_state_from_list";
-    public static final String ARGS_USER_UUID_FROM_LIST = "args_user_uuid_from_list";
-    public static final int REQUEST_CODE_DATE_PICKER = 0;
-    public static final int REQUEST_CODE_TIME_PICKER = 1;
-    public static final String TAG_DATE_PICKER = "DatePicker";
-    public static final String TAG_TIME_PICKER = "TimePicker";
+    private static final String ARGS_TASK_STATE_FROM_LIST = "args_task_state_from_list";
+    private static final String ARGS_USER_UUID_FROM_LIST = "args_user_uuid_from_list";
+    private static final int REQUEST_CODE_DATE_PICKER = 0;
+    private static final int REQUEST_CODE_TIME_PICKER = 1;
+    private static final String TAG_DATE_PICKER = "DatePicker";
+    private static final String TAG_TIME_PICKER = "TimePicker";
 
     private Task mTask;
     private Date mDate;
@@ -52,14 +51,13 @@ public class TaskDetailFragment extends DialogFragment {
     private UUID mUserId;
 
 
-    public static TaskDetailFragment newInstance(UUID userId/*, UUID taskId*/, State taskState) {
+    public static TaskDetailFragment newInstance(UUID userId, State taskState) {
 
         Bundle args = new Bundle();
 
         TaskDetailFragment fragment = new TaskDetailFragment();
         args.putSerializable(ARGS_USER_UUID_FROM_LIST, userId);
         args.putSerializable(ARGS_TASK_STATE_FROM_LIST, taskState);
-        /*args.putSerializable(ARGS_TASK_UUID_FROM_LIST, taskId);*/
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,9 +67,6 @@ public class TaskDetailFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         mUserId = ((UUID) getArguments().getSerializable(ARGS_USER_UUID_FROM_LIST));
-
-        /*UUID taskId = ((UUID) getArguments().getSerializable(ARGS_TASK_UUID_FROM_LIST));*/
-        /*mTask = mRepository.getSingleTask(mUserId, taskId);*/
 
         mRepository = Repository.getInstance(new User());
         mTask = new Task();
