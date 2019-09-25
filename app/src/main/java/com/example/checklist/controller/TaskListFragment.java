@@ -19,6 +19,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.checklist.R;
 import com.example.checklist.model.State;
@@ -26,11 +29,8 @@ import com.example.checklist.model.Task;
 import com.example.checklist.model.TaskRecyclerViewAdapter;
 import com.example.checklist.model.User;
 import com.example.checklist.repository.Repository;
-import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +47,9 @@ public class TaskListFragment extends Fragment {
     private List<Task> mTasks = new ArrayList<>();
     private User mUser;
     private State mState;
+    private TextView mTaskNotFound;
     private Repository mRepository;
+    private LinearLayout mBackground;
 
     private static final String TAG = "TaskListFragment";
 
@@ -92,7 +94,10 @@ public class TaskListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_task_list, container, false);
+
         initRecyclerView(view);
+
+        setBackgroundVisible();
 
         mAddTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,10 +160,21 @@ public class TaskListFragment extends Fragment {
     public void updateUI() {
         if (mAdapter != null)
             mAdapter.notifyDataSetChanged();
+        setBackgroundVisible();
     }
 
+    public void setBackgroundVisible() {
+        if (mTasks.size()>0)
+            mBackground.setVisibility(View.GONE);
+        else {
+            mTaskNotFound.setText("No "+ mState.toString() + " Task Found!!");
+            mBackground.setVisibility(View.VISIBLE);
+        }
+    }
 
     private void initRecyclerView(View view) {
+        mBackground = view.findViewById(R.id.task_not_found);
+        mTaskNotFound = view.findViewById(R.id.tv_task_not_found);
         mAddTask = view.findViewById(R.id.addTask);
         mRecyclerView = view.findViewById(R.id.task_list_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

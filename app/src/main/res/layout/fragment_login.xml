@@ -15,7 +15,7 @@
         android:foregroundGravity="center"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        app:cardBackgroundColor="#BEFFFFFF"
+        app:cardBackgroundColor="#A6FFFFFF"
         app:cardCornerRadius="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +62,7 @@
                 android:foregroundGravity="center"
                 android:gravity="center"
                 android:text="@string/button_login"
-                android:textColor="#333333"
+                android:textColor="#222222"
                 android:textSize="32sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -105,12 +105,12 @@
                     android:background="@drawable/background_edit_text"
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
-                    android:drawableLeft="@drawable/ic_action_person_plus"
+                    android:drawableLeft="@drawable/ic_action_person"
                     android:inputType="text"
                     android:textSize="14sp"
                     android:hint="@string/username_hint"
                     android:textColor="#ffffff"
-                    android:drawableStart="@drawable/ic_action_person_plus"
+                    android:drawableStart="@drawable/ic_action_person"
                     android:paddingStart="8dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
