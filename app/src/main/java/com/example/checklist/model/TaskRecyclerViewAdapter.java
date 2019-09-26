@@ -123,7 +123,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
                         "Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Repository.getInstance(new User()).removeSingleTask(mUserId, mTasks.get(position).getID());
+                                Repository.getInstance().removeSingleTask(mUserId, mTasks.get(position).getID());
                                 TaskRecyclerViewAdapter.this.notifyDataSetChanged();
                                 dialog.cancel();
                             }

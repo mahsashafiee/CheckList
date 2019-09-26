@@ -19,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -83,7 +82,8 @@ public class TaskListFragment extends Fragment {
         setHasOptionsMenu(true);
         mUser = ((User) getArguments().getSerializable(ARGS_USER_FROM_LOGIN));
         mState = (State) getArguments().getSerializable(ARGS_STATE_FROM_VIEW_PAGER);
-        mRepository = Repository.getInstance(mUser);
+        mRepository = Repository.getInstance();
+        mRepository.insertUser(mUser);
         mTasks = mRepository.getTasks(mUser.getID(), mState);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(mUser.getUsername());

@@ -24,6 +24,7 @@ public class User implements Serializable {
 
     }
 
+
     public User(String username, String password) {
 
         this();
@@ -32,7 +33,6 @@ public class User implements Serializable {
     }
 
     public User(UUID id) {
-        this();
         mId = id;
     }
 
