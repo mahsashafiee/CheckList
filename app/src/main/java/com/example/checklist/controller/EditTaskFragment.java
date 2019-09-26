@@ -76,7 +76,7 @@ public class EditTaskFragment extends DialogFragment {
 
         mTaskId = ((UUID) getArguments().getSerializable(ARGS_TASK_UUID_FROM_LIST));
 
-        mRepository = Repository.getInstance(new User());
+        mRepository = Repository.getInstance();
         mTask = mRepository.getSingleTask(mUserId, mTaskId);
         mDate = mTask.getDate();
 

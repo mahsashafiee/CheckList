@@ -68,7 +68,7 @@ public class TaskDetailFragment extends DialogFragment {
 
         mUserId = ((UUID) getArguments().getSerializable(ARGS_USER_UUID_FROM_LIST));
 
-        mRepository = Repository.getInstance(new User());
+        mRepository = Repository.getInstance();
         mTask = new Task();
         mTask.setState(((State) getArguments().getSerializable(ARGS_TASK_STATE_FROM_LIST)));
         mDate = mTask.getDate();

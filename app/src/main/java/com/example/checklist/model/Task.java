@@ -21,6 +21,9 @@ public class Task implements Serializable {
     private String mDescription /*"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit. There is no one who loves pain itself, who seeks after it and wants to have it."*/;
     private SimpleDateFormat mFormat;
 
+    public Task(UUID UUID) {
+        mUUID = UUID;
+    }
 
     public String getDescription() {
         return mDescription;
