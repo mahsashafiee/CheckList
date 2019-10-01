@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.UUID;
 
 public class TaskCursorWrapper extends CursorWrapper {
+
+
     public TaskCursorWrapper(Cursor cursor) {
         super(cursor);
     }
@@ -34,5 +36,12 @@ public class TaskCursorWrapper extends CursorWrapper {
         task.setState(state);
 
         return task;
+    }
+
+    public UUID getUserId(){
+
+        String userUUID = getString(getColumnIndex(TaskDataBaseSchema.TaskTable.Cols.USER_UUID));
+        UUID id = UUID.fromString(userUUID);
+        return id;
     }
 }

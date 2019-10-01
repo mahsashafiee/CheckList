@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.checklist.model.Hash;
 import com.example.checklist.model.database.CursorWrapper.TaskCursorWrapper;
 import com.example.checklist.model.database.CursorWrapper.UserCursorWrapper;
 import com.example.checklist.model.database.DataBaseSchema.UserDataBaseSchema.UserTable;
@@ -38,6 +39,8 @@ public class Repository implements Serializable {
     private Repository(Context context) {
         mContext = context.getApplicationContext();
         mDatabase = new CheckListOpenHelper(mContext).getWritableDatabase();
+        User user = new User("admin", Hash.MD5("123456"));
+        this.insertUser(user);
 
     }
 
@@ -62,6 +65,23 @@ public class Repository implements Serializable {
 
     public void deleteTask(UUID taskId) {
         mDatabase.delete(TaskTable.NAME, TaskTable.Cols.UUID + " = ?", new String[]{taskId.toString()});
+    }
+
+    public UUID getUsername(UUID taskId){
+
+        TaskCursorWrapper cursor = (TaskCursorWrapper) queryTasks(
+                new String[]{TaskTable.Cols.USER_UUID},
+                TaskTable.Cols.UUID + " = ?",
+                new String[]{taskId.toString()});
+        try {
+            cursor.moveToFirst();
+
+            if (cursor == null || cursor.getCount() == 0)
+                return null;
+            return cursor.getUserId();
+        } finally {
+            cursor.close();
+        }
     }
 
     public List<Task> getTasks(UUID userId, State state) {

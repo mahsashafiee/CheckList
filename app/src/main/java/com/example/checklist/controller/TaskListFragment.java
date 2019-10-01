@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.checklist.R;
+import com.example.checklist.model.Hash;
 import com.example.checklist.model.State;
 import com.example.checklist.model.Task;
 import com.example.checklist.model.TaskRecyclerViewAdapter;
@@ -51,6 +51,7 @@ public class TaskListFragment extends Fragment {
     private TextView mTaskNotFound;
     private Repository mRepository;
     private LinearLayout mBackground;
+    private boolean mIsAdmin;
 
     private static final String TAG = "TaskListFragment";
 
@@ -79,15 +80,37 @@ public class TaskListFragment extends Fragment {
 
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.actionBar_title);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setElevation(2);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setElevation(0);
 
         setHasOptionsMenu(true);
         mID = ((UUID) getArguments().getSerializable(ARGS_USER_UUID_FROM_LOGIN));
         mState = (State) getArguments().getSerializable(ARGS_STATE_FROM_VIEW_PAGER);
         mRepository = Repository.getInstance(getActivity().getApplicationContext());
-        mTasks = mRepository.getTasks(mID, mState);
+
+        getTasks();
+
 
         Log.d(TAG, "onCreate " + mState.toString() + ": called");
+    }
+
+    private void getTasks() {
+        isAdmin();
+
+        if (mIsAdmin) {
+            mTasks = mRepository.getTasks(mState);
+        }
+        else {
+            mTasks = mRepository.getTasks(mID, mState);
+        }
+    }
+
+    private void isAdmin() {
+        User user = mRepository.getUser(mID);
+        if (user.getUsername().equals("admin") && user.getPassword().equals(Hash.MD5("123456"))) {
+            mIsAdmin = true;
+        } else {
+            mIsAdmin = false;
+        }
     }
 
     @Override
@@ -160,7 +183,7 @@ public class TaskListFragment extends Fragment {
     public void updateUI() {
 
         if (mAdapter != null) {
-            mTasks = mRepository.getTasks(mID, mState);
+            getTasks();
             mAdapter.setTasks(mTasks);
             mAdapter.notifyDataSetChanged();
 

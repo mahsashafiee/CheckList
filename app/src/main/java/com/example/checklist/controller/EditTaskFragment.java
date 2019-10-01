@@ -35,11 +35,11 @@ import java.util.UUID;
  */
 public class EditTaskFragment extends DialogFragment {
 
-    public static final String ARGS_TASK_UUID_FROM_LIST = "args_task_uuid_from_list";
-    public static final int REQUEST_CODE_DATE_PICKER = 0;
-    public static final int REQUEST_CODE_TIME_PICKER = 1;
-    public static final String TAG_DATE_PICKER = "DatePicker";
-    public static final String TAG_TIME_PICKER = "TimePicker";
+    private static final String ARGS_TASK_UUID_FROM_LIST = "args_task_uuid_from_list";
+    private static final int REQUEST_CODE_DATE_PICKER = 0;
+    private static final int REQUEST_CODE_TIME_PICKER = 1;
+    private static final String TAG_DATE_PICKER = "DatePicker";
+    private static final String TAG_TIME_PICKER = "TimePicker";
 
     private Task mTask;
     private Date mDate;
@@ -189,9 +189,9 @@ public class EditTaskFragment extends DialogFragment {
 
         mTaskTitle.setText(mTask.getTitle());
         mTaskDescription.setText(mTask.getDescription());
-        mStateDoing.setChecked(mTask.getState()==State.DOING);
-        mStateDone.setChecked(mTask.getState()==State.DONE);
-        mStateToDo.setChecked(mTask.getState()==State.TODO);
+        mStateDoing.setChecked(mTask.getState() == State.DOING);
+        mStateDone.setChecked(mTask.getState() == State.DONE);
+        mStateToDo.setChecked(mTask.getState() == State.TODO);
     }
 
     @Override
