@@ -29,14 +29,16 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     private static final int REQUEST_CODE_EDIT_TASK = 2;
     private List<Task> mTasks;
     private Context mContext;
-    private UUID mUserId;
     private TaskListFragment mParentFragment;
 
-    public TaskRecyclerViewAdapter(Context context, TaskListFragment fragment, List<Task> tasks, UUID id) {
+    public TaskRecyclerViewAdapter(Context context, TaskListFragment fragment, List<Task> tasks) {
         mContext = context;
         mParentFragment = fragment;
         mTasks = tasks;
-        mUserId = id;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        mTasks = tasks;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         holder.mTvTaskDescription.setText(mTasks.get(position).getDescription());
         holder.mTvTaskDate.setText(mTasks.get(position).getSimpleDate() + "  " + mTasks.get(position).getSimpleTime());
         if (!mTasks.get(position).getTitle().isEmpty())
-            holder.mTvIcon.setText(mTasks.get(position).getTitle().charAt(0)+"");
+            holder.mTvIcon.setText(mTasks.get(position).getTitle().charAt(0) + "");
 
 
         switch (holder.getItemViewType()) {
@@ -116,15 +118,15 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                builder1.setMessage("Are you sure you want to delete "+ mTasks.get(position).getTitle() + "?");
+                builder1.setMessage("Are you sure you want to delete " + mTasks.get(position).getTitle() + "?");
                 builder1.setCancelable(true);
 
                 builder1.setPositiveButton(
                         "Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Repository.getInstance().removeSingleTask(mUserId, mTasks.get(position).getID());
-                                TaskRecyclerViewAdapter.this.notifyDataSetChanged();
+                                Repository.getInstance(mContext.getApplicationContext()).deleteTask(mTasks.get(position).getID());
+                                mParentFragment.updateUI();
                                 dialog.cancel();
                             }
                         });
@@ -145,7 +147,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         holder.mIvTaskEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(mUserId, mTasks.get(position).getID());
+                EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(mTasks.get(position).getID());
                 editTaskFragment.setTargetFragment(mParentFragment, REQUEST_CODE_EDIT_TASK);
                 editTaskFragment.show(mParentFragment.getFragmentManager(), TAG_EDIT_TASK);
             }
@@ -156,7 +158,9 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
     @Override
     public int getItemCount() {
-        return mTasks.size();
+        if (mTasks != null)
+            return mTasks.size();
+        return 0;
     }
 
     public class TaskViewHolder extends RecyclerView.ViewHolder {

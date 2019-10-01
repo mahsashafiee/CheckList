@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#57006D</color>
-    <color name="colorPrimaryDark">#2D003C</color>
-    <color name="colorAccent">#EC970F</color>
+    <color name="colorPrimaryDark">#340044</color>
+    <color name="colorAccent">#EC810F</color>
 
     <color name="cosmicFusionStart">#8DFF00FB</color>
     <color name="cosmicFusionMiddle">#8B953AFC</color>
     <color name="cosmicFusionEnd">#8D034AFD</color>
 
-    <color name="kingYnaStart">#FD3EBD</color>
-    <color name="kingYnaMiddle">#AA2AC7</color>
-    <color name="kingYnaEnd">#DD2511D5</color>
+    <color name="kingYnaStart">#FF3AA5</color>
+    <color name="kingYnaMiddle">#9F26BD</color>
+    <color name="kingYnaEnd">#E62213BD</color>
 
     <color name="pink">#BD0062</color>
 
@@ -21,9 +21,13 @@
     <color name="TaskColorPurple">#D190FF</color>
     <color name="TaskColorOrange">#FFCA80</color>
 
-    <color name="velvetSunEnd">#FFFDF8</color>
-    <color name="velvetSunFirst">#FF988A</color>
-    <color name="colorRadioButton">#FF8074</color>
+    <color name="velvetSunEnd">#FFFCF4</color>
+    <color name="velvetSunFirst">#FFB778</color>
+    <color name="colorRadioButton">#FFA340</color>
+
+    <color name="natureEnd">#CFFFBE</color>
+    <color name="natureCenter">#FFFFCC</color>
+    <color name="natureFirst">#FFFFFA</color>
 
 
     <color name="lightYellow">#FFFCF6</color>

@@ -14,15 +14,13 @@
         android:layout_height="wrap_content"
         android:foregroundGravity="center"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
-        app:cardBackgroundColor="#A6FFFFFF"
+        android:layout_margin="12dp"
+        app:cardBackgroundColor="#D8FFFFFF"
         app:cardCornerRadius="8dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/background_card_view"
             android:foregroundGravity="center_horizontal">
 
             <ImageView
@@ -132,7 +130,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/form_login_username"
                 app:passwordToggleEnabled="true"
-                app:passwordToggleTint="#E0E0E0">
+                app:passwordToggleTint="#CD000000">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_login_password"

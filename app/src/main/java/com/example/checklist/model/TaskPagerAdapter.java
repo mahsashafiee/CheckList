@@ -13,20 +13,21 @@ import com.example.checklist.controller.TaskListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TaskPagerAdapter extends FragmentStatePagerAdapter {
 
     private List<TaskListFragment> mListFragments = new ArrayList<>();
     private Context mContext;
-    private User mUser;
+    private UUID mID;
 
-    public TaskPagerAdapter(@NonNull FragmentManager fm, Context context, User user) {
+    public TaskPagerAdapter(@NonNull FragmentManager fm, Context context, UUID id) {
         super(fm);
         mContext = context;
-        mUser = user;
-        mListFragments.add(TaskListFragment.newInstance(mUser, State.TODO));
-        mListFragments.add(TaskListFragment.newInstance(mUser, State.DOING));
-        mListFragments.add(TaskListFragment.newInstance(mUser, State.DONE));
+        mID = id;
+        mListFragments.add(TaskListFragment.newInstance(mID, State.TODO));
+        mListFragments.add(TaskListFragment.newInstance(mID, State.DOING));
+        mListFragments.add(TaskListFragment.newInstance(mID, State.DONE));
     }
 
 

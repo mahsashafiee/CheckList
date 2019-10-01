@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,9 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -26,7 +23,6 @@ import android.widget.RadioGroup;
 import com.example.checklist.R;
 import com.example.checklist.model.State;
 import com.example.checklist.model.Task;
-import com.example.checklist.model.User;
 import com.example.checklist.repository.Repository;
 
 import java.text.DateFormat;
@@ -40,7 +36,6 @@ import java.util.UUID;
 public class EditTaskFragment extends DialogFragment {
 
     public static final String ARGS_TASK_UUID_FROM_LIST = "args_task_uuid_from_list";
-    public static final String ARGS_USER_UUID_FROM_LIST = "args_user_uuid_from_list";
     public static final int REQUEST_CODE_DATE_PICKER = 0;
     public static final int REQUEST_CODE_TIME_PICKER = 1;
     public static final String TAG_DATE_PICKER = "DatePicker";
@@ -51,18 +46,17 @@ public class EditTaskFragment extends DialogFragment {
     private EditText mTaskTitle, mTaskDescription;
     private Button mButtonDate, mButtonTime;
     private Repository mRepository;
-    private UUID mUserId;
     private UUID mTaskId;
     private RadioButton mStateDone, mStateDoing, mStateToDo;
     private RadioGroup radioGroup;
+    private DateFormat mFormat;
 
 
-    public static EditTaskFragment newInstance(UUID userId, UUID taskId) {
+    public static EditTaskFragment newInstance(UUID taskId) {
 
         Bundle args = new Bundle();
 
         EditTaskFragment fragment = new EditTaskFragment();
-        args.putSerializable(ARGS_USER_UUID_FROM_LIST, userId);
         args.putSerializable(ARGS_TASK_UUID_FROM_LIST, taskId);
         fragment.setArguments(args);
         return fragment;
@@ -72,12 +66,10 @@ public class EditTaskFragment extends DialogFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUserId = ((UUID) getArguments().getSerializable(ARGS_USER_UUID_FROM_LIST));
-
         mTaskId = ((UUID) getArguments().getSerializable(ARGS_TASK_UUID_FROM_LIST));
 
-        mRepository = Repository.getInstance();
-        mTask = mRepository.getSingleTask(mUserId, mTaskId);
+        mRepository = Repository.getInstance(getActivity().getApplicationContext());
+        mTask = mRepository.getTask(mTaskId);
         mDate = mTask.getDate();
 
     }
@@ -138,22 +130,11 @@ public class EditTaskFragment extends DialogFragment {
     private void TaskValidation() {
 
 
-        int checkedId = radioGroup.getCheckedRadioButtonId();
-
         if (!mTaskTitle.getText().toString().isEmpty() && !mTaskDescription.getText().toString().isEmpty()) {
             mTask.setDescription(mTaskDescription.getText().toString());
             mTask.setTitle(mTaskTitle.getText().toString());
-            if (checkedId == mStateDone.getId()) {
-                mStateDone.setChecked(true);
-                mTask.setState(State.DONE);
-            } else if (checkedId == mStateDoing.getId()) {
-                mStateDoing.setChecked(true);
-                mTask.setState(State.DOING);
-            } else {
-                mStateToDo.setChecked(true);
-                mTask.setState(State.TODO);
-            }
-            mRepository.addTask(mUserId, mTask);
+            stateChangeListener();
+            mRepository.updateTask(mTask);
             updateUI();
             return;
         } else if (mTaskTitle.getText().toString().isEmpty() && !(mTaskDescription.getText().toString().isEmpty())) {
@@ -161,22 +142,27 @@ public class EditTaskFragment extends DialogFragment {
                 mTask.setTitle(mTaskDescription.getText().toString().substring(0, mTaskDescription.getText().toString().indexOf(' ')));
             mTask.setTitle(mTaskDescription.getText().toString());
             mTask.setDescription(mTaskDescription.getText().toString());
-            if (checkedId == mStateDone.getId()) {
-                mStateDone.setChecked(true);
-                mTask.setState(State.DONE);
-            } else if (checkedId == mStateDoing.getId()) {
-                mStateDoing.setChecked(true);
-                mTask.setState(State.DOING);
-            } else {
-                mStateToDo.setChecked(true);
-                mTask.setState(State.TODO);
-            }
-            mRepository.addTask(mUserId, mTask);
+            stateChangeListener();
+            mRepository.updateTask(mTask);
             updateUI();
             return;
         }
 
 
+    }
+
+    private void stateChangeListener() {
+        int checkedId = radioGroup.getCheckedRadioButtonId();
+        if (checkedId == mStateDone.getId()) {
+            mStateDone.setChecked(true);
+            mTask.setState(State.DONE);
+        } else if (checkedId == mStateDoing.getId()) {
+            mStateDoing.setChecked(true);
+            mTask.setState(State.DOING);
+        } else {
+            mStateToDo.setChecked(true);
+            mTask.setState(State.TODO);
+        }
     }
 
     private void updateUI() {
@@ -195,11 +181,11 @@ public class EditTaskFragment extends DialogFragment {
         mStateToDo = view.findViewById(R.id.radioButton_todo);
 
 
-        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        mButtonDate.setText(df.format(mTask.getDate()));
+        mFormat = new SimpleDateFormat("dd MMM yyyy");
+        mButtonDate.setText(mFormat.format(mTask.getDate()));
 
-        DateFormat tf = new SimpleDateFormat("hh:mm a");
-        mButtonTime.setText(tf.format(mTask.getDate()));
+        mFormat = new SimpleDateFormat("hh:mm a");
+        mButtonTime.setText(mFormat.format(mTask.getDate()));
 
         mTaskTitle.setText(mTask.getTitle());
         mTaskDescription.setText(mTask.getDescription());

@@ -1,4 +1,4 @@
-package com.example.checklist.model.database.CheckList.DataBaseSchema;
+package com.example.checklist.model.database.DataBaseSchema;
 
 public class UserDataBaseSchema {
 

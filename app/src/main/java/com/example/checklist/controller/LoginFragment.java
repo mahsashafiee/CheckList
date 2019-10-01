@@ -19,7 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.checklist.R;
+import com.example.checklist.model.Hash;
 import com.example.checklist.model.User;
+import com.example.checklist.repository.Repository;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -30,26 +32,24 @@ import com.google.android.material.textfield.TextInputLayout;
  */
 public class LoginFragment extends Fragment {
 
-    public static final String ARGS_LOGIN_USER = "args_login_user";
     public static final int REQUEST_CODE_SIGN_UP = 0;
     public static final String TAG_SIGN_UP = "signUpFragment";
     private User mUser;
+    private Repository mRepository;
     private EditText mUsername, mPassword;
     private TextInputLayout mFormUsername, mFormPassword;
     private Button mLogin;
     private TextView mCreateAccount;
-    private boolean isSignedUp;
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
-    public static LoginFragment newInstance(/*User user*/) {
+    public static LoginFragment newInstance() {
 
         Bundle args = new Bundle();
 
         LoginFragment fragment = new LoginFragment();
-        /*args.putSerializable(ARGS_LOGIN_USER, user);*/
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,30 +77,11 @@ public class LoginFragment extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onClick(View view) {
-                User user = new User(mUsername.getText().toString(), mPassword.getText().toString());
-
-                if (mUser == null || !isSignedUp) {
-                    Snackbar.make(getActivity().findViewById(R.id.fragment_container), "You should sing up first!", BaseTransientBottomBar.LENGTH_LONG).show();
-                    return;
-
-                } else if (mUsername.getText().toString().isEmpty()) {
-                    mFormUsername.setError("please enter your username!");
-                    return;
-
-                } else if (mPassword.getText().toString().isEmpty()) {
-                    mFormPassword.setError("please enter your password!");
-                    return;
-
-                } else if (!mUser.getPassword().equals(mPassword.getText().toString())) {
-                    mFormPassword.setError("Password is wrong!");
-                    return;
-
-                } else if (!mUser.getUsername().equals(mUsername.getText().toString())) {
-                    mFormUsername.setError("Username is wrong!");
-                    return;
-                }else if (mUser.equals(user)){
-                    Intent intent = TaskPagerActivity.newIntent(getActivity(), mUser);
-                    startActivity(intent);
+                if (validateUsername()) {
+                    if (validatePassword()) {
+                        Intent intent = TaskPagerActivity.newIntent(getActivity(), mUser.getID());
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -115,6 +96,7 @@ public class LoginFragment extends Fragment {
         mFormPassword = view.findViewById(R.id.form_login_password);
         mLogin = view.findViewById(R.id.button_login);
         mCreateAccount = view.findViewById(R.id.tv_go_to_sign_up);
+        mRepository = Repository.getInstance(getActivity().getApplicationContext());
 
 
     }
@@ -123,18 +105,55 @@ public class LoginFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
         if (resultCode == Activity.RESULT_CANCELED || data == null)
             return;
 
         if (requestCode == REQUEST_CODE_SIGN_UP) {
 
-            mUser = (User) data.getSerializableExtra(SignUpFragment.EXTRA_USER_FROM_SIGN_UP);
+            User user = new User();
 
-            isSignedUp = data.getBooleanExtra(SignUpFragment.EXTRA_IS_SIGNED_UP, false);
-
-            mUsername.setText(mUser.getUsername());
-            mPassword.setText(mUser.getPassword());
-
+            mUsername.setText(user.getUsername());
+            mPassword.setText(user.getPassword());
         }
+    }
+
+    public boolean validateUsername() {
+        String username = mUsername.getText().toString().trim();
+        if (username.isEmpty()) {
+            mFormUsername.setError("please enter your username!");
+            return false;
+
+        } else if (mRepository.getUser(username) == null || username.length() > mFormUsername.getCounterMaxLength()) {
+            mFormUsername.setError("Username is not valid!");
+            return false;
+
+        } else
+            mFormUsername.setErrorEnabled(false);
+        return true;
+    }
+
+    public Boolean validatePassword() {
+
+        mUser = mRepository.getUser(mUsername.getText().toString().trim());
+        String password = mPassword.getText().toString().trim();
+
+        if (!password.isEmpty()){
+            password = Hash.MD5(mPassword.getText().toString());
+        }
+
+        if (password.isEmpty()) {
+            mFormPassword.setError("please enter your password!");
+            return false;
+
+        } else if (!mUser.getPassword().equals(password)) {
+            mFormPassword.setError("Password is not valid!");
+            return false;
+
+        } else if (mUser.getPassword().equals(password)) {
+            mFormPassword.setErrorEnabled(false);
+            return true;
+        }
+        return null;
     }
 }

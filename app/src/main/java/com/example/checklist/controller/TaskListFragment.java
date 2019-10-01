@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -44,7 +46,7 @@ public class TaskListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private TaskRecyclerViewAdapter mAdapter;
     private List<Task> mTasks = new ArrayList<>();
-    private User mUser;
+    private UUID mID;
     private State mState;
     private TextView mTaskNotFound;
     private Repository mRepository;
@@ -52,15 +54,15 @@ public class TaskListFragment extends Fragment {
 
     private static final String TAG = "TaskListFragment";
 
-    public static final String ARGS_USER_FROM_LOGIN = "args_user_from_login";
+    public static final String ARGS_USER_UUID_FROM_LOGIN = "args_user_uuid_from_login";
     public static final String ARGS_STATE_FROM_VIEW_PAGER = "args_state_from_view_pager";
 
-    public static TaskListFragment newInstance(User user, State state) {
+    public static TaskListFragment newInstance(UUID id, State state) {
 
         Bundle args = new Bundle();
 
         TaskListFragment fragment = new TaskListFragment();
-        args.putSerializable(ARGS_USER_FROM_LOGIN, user);
+        args.putSerializable(ARGS_USER_UUID_FROM_LOGIN, id);
         args.putSerializable(ARGS_STATE_FROM_VIEW_PAGER, state);
         fragment.setArguments(args);
         return fragment;
@@ -80,13 +82,11 @@ public class TaskListFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setElevation(2);
 
         setHasOptionsMenu(true);
-        mUser = ((User) getArguments().getSerializable(ARGS_USER_FROM_LOGIN));
+        mID = ((UUID) getArguments().getSerializable(ARGS_USER_UUID_FROM_LOGIN));
         mState = (State) getArguments().getSerializable(ARGS_STATE_FROM_VIEW_PAGER);
-        mRepository = Repository.getInstance();
-        mRepository.insertUser(mUser);
-        mTasks = mRepository.getTasks(mUser.getID(), mState);
+        mRepository = Repository.getInstance(getActivity().getApplicationContext());
+        mTasks = mRepository.getTasks(mID, mState);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(mUser.getUsername());
         Log.d(TAG, "onCreate " + mState.toString() + ": called");
     }
 
@@ -103,7 +103,7 @@ public class TaskListFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(mUser.getID(), mState);
+                TaskDetailFragment taskDetailFragment = TaskDetailFragment.newInstance(mID, mState);
                 taskDetailFragment.setTargetFragment(TaskListFragment.this, REQUEST_CODE_TASK_DETAIL);
                 taskDetailFragment.show(getFragmentManager(), TAG_TASK_DETAIL);
             }
@@ -134,7 +134,7 @@ public class TaskListFragment extends Fragment {
                         "Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                mRepository.removeTasks(mUser.getID());
+                                mRepository.deleteTasks(mID);
                                 updateUI();
                                 dialog.cancel();
                             }
@@ -158,18 +158,29 @@ public class TaskListFragment extends Fragment {
     }
 
     public void updateUI() {
-        if (mAdapter != null)
+
+        if (mAdapter != null) {
+            mTasks = mRepository.getTasks(mID, mState);
+            mAdapter.setTasks(mTasks);
             mAdapter.notifyDataSetChanged();
+
+        } else {
+            mAdapter = new TaskRecyclerViewAdapter(getActivity(), this, mTasks);
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
         setBackgroundVisible();
     }
 
     public void setBackgroundVisible() {
-        if (mTasks.size()>0)
-            mBackground.setVisibility(View.GONE);
-        else {
-            mTaskNotFound.setText("No "+ mState.toString() + " Task Found!!");
+
+        if (mTasks == null || mTasks.size() == 0) {
+            mTaskNotFound.setText("No " + mState.toString() + " Task Found!!");
             mBackground.setVisibility(View.VISIBLE);
+        } else {
+            mBackground.setVisibility(View.GONE);
         }
+
     }
 
     private void initRecyclerView(View view) {
@@ -178,7 +189,7 @@ public class TaskListFragment extends Fragment {
         mAddTask = view.findViewById(R.id.addTask);
         mRecyclerView = view.findViewById(R.id.task_list_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new TaskRecyclerViewAdapter(getActivity(), TaskListFragment.this, mTasks, mUser.getID());
+        mAdapter = new TaskRecyclerViewAdapter(getActivity(), TaskListFragment.this, mTasks);
         mRecyclerView.setAdapter(mAdapter);
     }
 

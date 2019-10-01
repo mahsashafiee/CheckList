@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -18,7 +17,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.checklist.R;
+import com.example.checklist.model.Hash;
 import com.example.checklist.model.User;
+import com.example.checklist.repository.Repository;
 import com.google.android.material.textfield.TextInputLayout;
 
 
@@ -29,8 +30,8 @@ public class SignUpFragment extends Fragment {
 
     public static final String ARGS_SIGN_UP = "args_sign_up";
     public static final String EXTRA_USER_FROM_SIGN_UP = "extra_user_from_sign_up";
-    public static final String EXTRA_IS_SIGNED_UP = "extra_is_signed_up";
     private User mUser;
+    private Repository mRepository;
     private EditText mUsername, mPassword, mConfirmPass;
     private TextInputLayout mFormUsername, mFormPassword, mFormConfirm;
     private Button mSignUp;
@@ -70,21 +71,12 @@ public class SignUpFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (mUsername.getText().toString().isEmpty()) {
-                    mFormUsername.setError("please enter your username!");
-                    return;
+                if (validateUsername())
+                    if (validatePassword())
+                        if (confirmPassword()) {
+                            sendResult();
+                        }
 
-                } else if (mPassword.getText().toString().isEmpty()){
-                    mFormPassword.setError("please enter your password!");
-                    return;
-
-                }else if (!mPassword.getText().toString().equals(mConfirmPass.getText().toString())){
-                    mFormConfirm.setError("Your passwords dose not Match");
-                    return;
-
-                } else {
-                    sendResult(true);
-                }
             }
 
         });
@@ -92,20 +84,20 @@ public class SignUpFragment extends Fragment {
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendResult(false);
+                sendResult();
             }
         });
 
 
-        return  view;
+        return view;
     }
 
-    private void sendResult(boolean isSignedUp) {
+    private void sendResult() {
 
         User user = new User(mUsername.getText().toString(), mPassword.getText().toString());
+        user.setPassword(Hash.MD5(user.getPassword()));
+        mRepository.insertUser(user);
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_USER_FROM_SIGN_UP, user);
-        intent.putExtra(EXTRA_IS_SIGNED_UP, isSignedUp);
         getTargetFragment().onActivityResult(LoginFragment.REQUEST_CODE_SIGN_UP, Activity.RESULT_OK, intent);
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
@@ -120,12 +112,61 @@ public class SignUpFragment extends Fragment {
         mFormPassword = view.findViewById(R.id.form_sign_up_password);
         mFormConfirm = view.findViewById(R.id.form_confirm_password);
         mLogin = view.findViewById(R.id.tv_go_to_login);
-
         mSignUp = view.findViewById(R.id.button_sign_up);
+        mRepository = Repository.getInstance(getActivity().getApplicationContext());
 
         mUsername.setText(mUser.getUsername());
         mPassword.setText(mUser.getPassword());
         mConfirmPass.setText(mUser.getPassword());
     }
 
+    public boolean validateUsername() {
+
+        String username = mUsername.getText().toString().trim();
+        if (username.isEmpty()) {
+            mFormUsername.setError("please enter a username!");
+            return false;
+
+        } else if (username.length() > mFormUsername.getCounterMaxLength()) {
+            mFormUsername.setError("Username cannot be more than " + mFormUsername.getCounterMaxLength() + " characters!");
+            return false;
+
+        } else if (mRepository.getUser(username) != null) {
+            mFormUsername.setError("Username not available, Choose another!");
+            return false;
+
+        } else
+            mFormUsername.setErrorEnabled(false);
+        return true;
+    }
+
+    public boolean validatePassword() {
+
+        String password = mPassword.getText().toString().trim();
+        if (password.isEmpty()) {
+            mFormPassword.setError("please enter your password!");
+            return false;
+
+        } else
+            mFormPassword.setErrorEnabled(false);
+        return true;
+
+    }
+
+    public boolean confirmPassword() {
+
+        String password = mConfirmPass.getText().toString().trim();
+        if (password.isEmpty()) {
+            mFormConfirm.setError("please confirm your password!");
+            return false;
+
+        } else if (!mPassword.getText().toString().equals(mConfirmPass.getText().toString())) {
+            mFormConfirm.setError("Your passwords dose not Match");
+            return false;
+
+        } else
+            mFormPassword.setErrorEnabled(false);
+        return true;
+
+    }
 }

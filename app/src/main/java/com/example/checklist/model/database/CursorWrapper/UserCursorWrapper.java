@@ -1,10 +1,10 @@
-package com.example.checklist.model.database.CheckList.CursorWrapper;
+package com.example.checklist.model.database.CursorWrapper;
 
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
 import com.example.checklist.model.User;
-import com.example.checklist.model.database.CheckList.DataBaseSchema.UserDataBaseSchema;
+import com.example.checklist.model.database.DataBaseSchema.UserDataBaseSchema;
 
 import java.util.UUID;
 

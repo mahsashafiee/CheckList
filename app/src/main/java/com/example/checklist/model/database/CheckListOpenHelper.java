@@ -1,11 +1,10 @@
-package com.example.checklist.model.database.CheckList;
+package com.example.checklist.model.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import com.example.checklist.model.database.CheckList.DataBaseSchema.TaskDataBaseSchema.TaskTable;
-import com.example.checklist.model.database.CheckList.DataBaseSchema.UserDataBaseSchema.UserTable;
-import com.example.checklist.model.database.CheckList.DataBaseSchema.UserHasTaskDataBaseSchema.UserHasTaskTable;
+import com.example.checklist.model.database.DataBaseSchema.TaskDataBaseSchema.TaskTable;
+import com.example.checklist.model.database.DataBaseSchema.UserDataBaseSchema.UserTable;
 
 import androidx.annotation.Nullable;
 
@@ -17,11 +16,12 @@ public class CheckListOpenHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_TASK = "CREATE TABLE " + TaskTable.NAME +
             "(" +
             TaskTable.Cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            TaskTable.Cols.UUID + ", " +
-            TaskTable.Cols.TITLE + ", " +
-            TaskTable.Cols.DESCRIPTION + ", " +
-            TaskTable.Cols.DATE + ", " +
-            TaskTable.Cols.STATE +
+            TaskTable.Cols.UUID + " NOT NULL, " +
+            TaskTable.Cols.USER_UUID + " NOT NULL ," +
+            TaskTable.Cols.TITLE + " NOT NULL, " +
+            TaskTable.Cols.DESCRIPTION + " NOT NULL, " +
+            TaskTable.Cols.DATE + " NOT NULL, " +
+            TaskTable.Cols.STATE + " NOT NULL " +
             " )";
 
     private static final String CREATE_TABLE_USER = "CREATE TABLE " + UserTable.NAME +
@@ -30,14 +30,8 @@ public class CheckListOpenHelper extends SQLiteOpenHelper {
             UserTable.Cols.UUID + ", " +
             UserTable.Cols.USERNAME + ", " +
             UserTable.Cols.PASSWORD +
-            ")";
+            " ,FOREIGN KEY (" + UserTable.Cols.UUID+ ") REFERENCES " + TaskTable.NAME + "(" + TaskTable.Cols.USER_UUID +"))";
 
-    private static final String CREATE_TABLE_USER_HAS_TASK = "CREATE TABLE " + UserHasTaskTable.NAME +
-            "(" +
-            UserHasTaskTable.Cols.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-            UserHasTaskTable.Cols.TASK_UUID + ", " +
-            UserHasTaskTable.Cols.USER_UUID +
-            ")";
 
 
     public CheckListOpenHelper(@Nullable Context context) {
@@ -49,7 +43,6 @@ public class CheckListOpenHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL(CREATE_TABLE_TASK);
         sqLiteDatabase.execSQL(CREATE_TABLE_USER);
-        sqLiteDatabase.execSQL(CREATE_TABLE_USER_HAS_TASK);
 
     }
 
@@ -58,7 +51,6 @@ public class CheckListOpenHelper extends SQLiteOpenHelper {
 
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TaskTable.NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + UserTable.NAME);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + UserHasTaskTable.NAME);
 
     }
 }
