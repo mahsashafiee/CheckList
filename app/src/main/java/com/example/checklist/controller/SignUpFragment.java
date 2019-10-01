@@ -29,7 +29,6 @@ import com.google.android.material.textfield.TextInputLayout;
 public class SignUpFragment extends Fragment {
 
     public static final String ARGS_SIGN_UP = "args_sign_up";
-    public static final String EXTRA_USER_FROM_SIGN_UP = "extra_user_from_sign_up";
     private User mUser;
     private Repository mRepository;
     private EditText mUsername, mPassword, mConfirmPass;

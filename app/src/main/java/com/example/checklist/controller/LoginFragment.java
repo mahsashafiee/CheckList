@@ -32,8 +32,8 @@ import com.google.android.material.textfield.TextInputLayout;
  */
 public class LoginFragment extends Fragment {
 
-    public static final int REQUEST_CODE_SIGN_UP = 0;
-    public static final String TAG_SIGN_UP = "signUpFragment";
+    protected static final int REQUEST_CODE_SIGN_UP = 0;
+    protected static final String TAG_SIGN_UP = "signUpFragment";
     private User mUser;
     private Repository mRepository;
     private EditText mUsername, mPassword;
@@ -115,10 +115,14 @@ public class LoginFragment extends Fragment {
 
             mUsername.setText(user.getUsername());
             mPassword.setText(user.getPassword());
+
+            mFormUsername.setErrorEnabled(false);
+            mFormPassword.setErrorEnabled(false);
         }
     }
 
-    public boolean validateUsername() {
+    private boolean validateUsername() {
+        mFormUsername.setErrorEnabled(true);
         String username = mUsername.getText().toString().trim();
         if (username.isEmpty()) {
             mFormUsername.setError("please enter your username!");
@@ -133,7 +137,8 @@ public class LoginFragment extends Fragment {
         return true;
     }
 
-    public Boolean validatePassword() {
+    private Boolean validatePassword() {
+        mFormPassword.setErrorEnabled(true);
 
         mUser = mRepository.getUser(mUsername.getText().toString().trim());
         String password = mPassword.getText().toString().trim();

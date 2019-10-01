@@ -2,6 +2,7 @@ package com.example.checklist.controller;
 
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -146,7 +147,8 @@ public class TaskListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sub_item_menu_log_out:
-                getActivity().finish();
+                Intent intent = MainActivity.newIntent(getActivity());
+                getActivity().startActivity(intent);
                 return true;
             case R.id.item_menu_remove_all: {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
