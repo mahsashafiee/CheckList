@@ -22,7 +22,6 @@ import android.widget.EditText;
 import com.example.checklist.R;
 import com.example.checklist.model.State;
 import com.example.checklist.model.Task;
-import com.example.checklist.model.User;
 import com.example.checklist.repository.Repository;
 
 import java.text.DateFormat;
@@ -68,7 +67,7 @@ public class TaskDetailFragment extends DialogFragment {
 
         mUserId = ((UUID) getArguments().getSerializable(ARGS_USER_UUID_FROM_LIST));
 
-        mRepository = Repository.getInstance();
+        mRepository = Repository.getInstance(getActivity().getApplicationContext());
         mTask = new Task();
         mTask.setState(((State) getArguments().getSerializable(ARGS_TASK_STATE_FROM_LIST)));
         mDate = mTask.getDate();
@@ -132,7 +131,7 @@ public class TaskDetailFragment extends DialogFragment {
         if (!mTaskTitle.getText().toString().isEmpty() && !mTaskDescription.getText().toString().isEmpty()) {
             mTask.setDescription(mTaskDescription.getText().toString());
             mTask.setTitle(mTaskTitle.getText().toString());
-            mRepository.addTask(mUserId, mTask);
+            mRepository.insertTask(mUserId, mTask);
             updateUI();
             return;
         } else if (mTaskTitle.getText().toString().isEmpty() && !(mTaskDescription.getText().toString().isEmpty())) {
@@ -140,7 +139,7 @@ public class TaskDetailFragment extends DialogFragment {
                 mTask.setTitle(mTaskDescription.getText().toString().substring(0, mTaskDescription.getText().toString().indexOf(' ')));
             mTask.setTitle(mTaskDescription.getText().toString());
             mTask.setDescription(mTaskDescription.getText().toString());
-            mRepository.addTask(mUserId, mTask);
+            mRepository.insertTask(mUserId, mTask);
             updateUI();
             return;
         }
@@ -164,8 +163,6 @@ public class TaskDetailFragment extends DialogFragment {
         DateFormat tf = new SimpleDateFormat("hh:mm a");
         mButtonTime.setText(tf.format(mTask.getDate()));
 
-        mTaskTitle.setText(mTask.getTitle());
-        mTaskDescription.setText(mTask.getDescription());
         mTaskState.setText(mTask.getState().toString());
         mTaskState.setChecked(true);
         mTaskState.setEnabled(false);
