@@ -72,6 +72,8 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         holder.mTvTaskTitle.setText(mTasks.get(position).getTitle());
         holder.mTvTaskDescription.setText(mTasks.get(position).getDescription());
         holder.mTvTaskDate.setText(mTasks.get(position).getSimpleDate() + "  " + mTasks.get(position).getSimpleTime());
+        UUID userID = Repository.getInstance(mContext.getApplicationContext()).getUsername(mTasks.get(position).getID());
+        holder.mTvTaskUsername.setText("("+Repository.getInstance(mContext.getApplicationContext()).getUser(userID).getUsername()+")");
         if (!mTasks.get(position).getTitle().isEmpty())
             holder.mTvIcon.setText(mTasks.get(position).getTitle().charAt(0) + "");
 
@@ -165,7 +167,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
 
     public class TaskViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView mTvTaskTitle, mTvTaskDescription, mTvTaskDate, mTvIcon;
+        private TextView mTvTaskTitle, mTvTaskDescription, mTvTaskDate, mTvIcon, mTvTaskUsername;
         private ImageView mIvTaskDelete, mIvTaskEdit;
         private CardView mCardView;
         private ConstraintLayout mParentLayout;
@@ -174,6 +176,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             super(itemView);
 
             mTvTaskTitle = itemView.findViewById(R.id.item_task_title);
+            mTvTaskUsername = itemView.findViewById(R.id.item_task_username);
             mCardView = itemView.findViewById(R.id.item_card_view);
             mTvTaskDate = itemView.findViewById(R.id.item_task_date);
             mTvIcon = itemView.findViewById(R.id.item_task_icon);

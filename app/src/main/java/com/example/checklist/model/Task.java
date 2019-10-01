@@ -18,7 +18,10 @@ public class Task implements Serializable {
     private State mState;
     private UUID mUUID;
     private Date mDate;
-    private String mDescription /*"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit. There is no one who loves pain itself, who seeks after it and wants to have it."*/;
+    private String mDescription /*"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
+     consectetur, adipisci velit. There is no one who loves pain itself,
+     who seeks after it and wants to have it."*/;
+
     private SimpleDateFormat mFormat;
 
     public Task(UUID UUID) {
@@ -28,7 +31,6 @@ public class Task implements Serializable {
     public String getDescription() {
         return mDescription;
     }
-
 
     public void setDescription(String description) {
         mDescription = description;
@@ -90,6 +92,7 @@ public class Task implements Serializable {
         return mFormat.format(mDate);
 
     }
+
     public String getSimpleTime(){
         mFormat = new SimpleDateFormat("hh:mm a");
         return mFormat.format(mDate);

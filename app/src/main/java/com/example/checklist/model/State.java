@@ -24,7 +24,6 @@ public enum State {
         return value;
     }
 
-
     public static State fromInt(int i) {
         State type = intToState.get(Integer.valueOf(i));
         if (type == null)
