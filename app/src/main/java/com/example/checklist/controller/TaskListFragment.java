@@ -88,6 +88,8 @@ public class TaskListFragment extends Fragment {
         mState = (State) getArguments().getSerializable(ARGS_STATE_FROM_VIEW_PAGER);
         mRepository = Repository.getInstance(getActivity().getApplicationContext());
 
+        isAdmin();
+
         getTasks();
 
 
@@ -95,7 +97,6 @@ public class TaskListFragment extends Fragment {
     }
 
     private void getTasks() {
-        isAdmin();
 
         if (mIsAdmin) {
             mTasks = mRepository.getTasks(mState);

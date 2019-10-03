@@ -40,7 +40,8 @@ public class Repository implements Serializable {
         mContext = context.getApplicationContext();
         mDatabase = new CheckListOpenHelper(mContext).getWritableDatabase();
         User user = new User("admin", Hash.MD5("123456"));
-        this.insertUser(user);
+        if (getUser(user.getUsername()) == null)
+            this.insertUser(user);
 
     }
 
@@ -67,7 +68,7 @@ public class Repository implements Serializable {
         mDatabase.delete(TaskTable.NAME, TaskTable.Cols.UUID + " = ?", new String[]{taskId.toString()});
     }
 
-    public UUID getUsername(UUID taskId){
+    public UUID getUsername(UUID taskId) {
 
         TaskCursorWrapper cursor = (TaskCursorWrapper) queryTasks(
                 new String[]{TaskTable.Cols.USER_UUID},
@@ -236,14 +237,14 @@ public class Repository implements Serializable {
 
     private CursorWrapper queryGetTasks(State state) {
 
-        String selectQuery = "SELECT " + TaskTable.NAME + "." + TaskTable.Cols.UUID + ", " +
+        String selectQuery = "SELECT * FROM " + TaskTable.NAME + /*"." + TaskTable.Cols.UUID + ", " +
                 TaskTable.Cols.TITLE + ", " +
                 TaskTable.Cols.DESCRIPTION + ", " +
                 TaskTable.Cols.DATE + ", " +
                 TaskTable.Cols.STATE + " FROM " +
                 TaskTable.NAME + " JOIN " +
                 UserTable.NAME + " ON " +
-                TaskTable.NAME + "." + TaskTable.Cols.USER_UUID + " = " + UserTable.NAME + "." + UserTable.Cols.UUID + " WHERE " + TaskTable.Cols.STATE + "=" + state.getValue();
+                TaskTable.NAME + "." + TaskTable.Cols.USER_UUID + " = " + UserTable.NAME + "." + UserTable.Cols.UUID +*/ " WHERE " + TaskTable.Cols.STATE + "=" + state.getValue();
 
         Cursor cursor = mDatabase.rawQuery(selectQuery, null);
 

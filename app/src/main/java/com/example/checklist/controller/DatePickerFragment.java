@@ -27,6 +27,7 @@ import java.util.GregorianCalendar;
  * A simple {@link Fragment} subclass.
  */
 public class DatePickerFragment extends DialogFragment {
+
     private static final String ARG_TASK_DATE = "taskDate";
     public static final String EXTRA_TASK_DATE = "com.example.checklist.crimeDate";
 
@@ -101,4 +102,6 @@ public class DatePickerFragment extends DialogFragment {
         int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
         mDatePicker.init(year, monthOfYear, dayOfMonth, null);
     }
+
+
 }

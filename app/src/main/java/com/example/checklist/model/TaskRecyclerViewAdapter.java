@@ -2,6 +2,7 @@ package com.example.checklist.model;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checklist.R;
 import com.example.checklist.controller.EditTaskFragment;
+import com.example.checklist.controller.MainActivity;
 import com.example.checklist.controller.TaskListFragment;
 import com.example.checklist.repository.Repository;
 
@@ -156,6 +159,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         });
 
 
+
     }
 
     @Override
@@ -184,6 +188,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             mIvTaskEdit = itemView.findViewById(R.id.item_task_edit);
             mIvTaskDelete = itemView.findViewById(R.id.item_task_delete);
             mParentLayout = itemView.findViewById(R.id.item_parent_layout);
+
         }
     }
 }
