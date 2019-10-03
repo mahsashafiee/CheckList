@@ -43,6 +43,7 @@ public class TaskDetailFragment extends DialogFragment {
 
     private Task mTask;
     private Date mDate;
+    private long tempTime;
     private CheckBox mTaskState;
     private EditText mTaskTitle, mTaskDescription;
     private Button mButtonDate, mButtonTime;
@@ -71,12 +72,12 @@ public class TaskDetailFragment extends DialogFragment {
         mTask = new Task();
         mTask.setState(((State) getArguments().getSerializable(ARGS_TASK_STATE_FROM_LIST)));
         mDate = mTask.getDate();
+        tempTime = mDate.getTime();
     }
 
     public TaskDetailFragment() {
         // Required empty public constructor
     }
-
 
     @NonNull
     @Override
@@ -131,18 +132,22 @@ public class TaskDetailFragment extends DialogFragment {
         if (!mTaskTitle.getText().toString().isEmpty() && !mTaskDescription.getText().toString().isEmpty()) {
             mTask.setDescription(mTaskDescription.getText().toString());
             mTask.setTitle(mTaskTitle.getText().toString());
+            mTask.getDate().setTime(tempTime);
             mRepository.insertTask(mUserId, mTask);
             updateUI();
             return;
         } else if (mTaskTitle.getText().toString().isEmpty() && !(mTaskDescription.getText().toString().isEmpty())) {
             if (mTaskDescription.getText().toString().contains(" "))
                 mTask.setTitle(mTaskDescription.getText().toString().substring(0, mTaskDescription.getText().toString().indexOf(' ')));
-            mTask.setTitle(mTaskDescription.getText().toString());
+            else
+                mTask.setTitle(mTaskDescription.getText().toString());
             mTask.setDescription(mTaskDescription.getText().toString());
+            mTask.getDate().setTime(tempTime);
             mRepository.insertTask(mUserId, mTask);
             updateUI();
             return;
-        }
+        }else if (mTaskDescription.getText().toString().isEmpty())
+            mTaskDescription.setError("Description cannot be empty!!");
     }
 
     private void updateUI() {
@@ -185,6 +190,7 @@ public class TaskDetailFragment extends DialogFragment {
         }
         if (requestCode == REQUEST_CODE_TIME_PICKER) {
             Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TASK_TIME);
+            tempTime = date.getTime();
 
             mDate.setTime(date.getTime());
             mTask.setDate(mDate);

@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (toDoFragment == null){
             fragmentManager.beginTransaction().
-                    add(R.id.fragment_container, LoginFragment.newInstance(/*new User()*/)).commit();
+                    add(R.id.fragment_container, LoginFragment.newInstance()).commit();
         }
     }
 }

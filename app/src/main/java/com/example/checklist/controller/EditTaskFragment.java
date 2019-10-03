@@ -43,6 +43,7 @@ public class EditTaskFragment extends DialogFragment {
 
     private Task mTask;
     private Date mDate;
+    private long tempTime;
     private EditText mTaskTitle, mTaskDescription;
     private Button mButtonDate, mButtonTime;
     private Repository mRepository;
@@ -71,6 +72,7 @@ public class EditTaskFragment extends DialogFragment {
         mRepository = Repository.getInstance(getActivity().getApplicationContext());
         mTask = mRepository.getTask(mTaskId);
         mDate = mTask.getDate();
+        tempTime = mDate.getTime();
 
     }
 
@@ -134,6 +136,7 @@ public class EditTaskFragment extends DialogFragment {
             mTask.setDescription(mTaskDescription.getText().toString());
             mTask.setTitle(mTaskTitle.getText().toString());
             stateChangeListener();
+            mTask.getDate().setTime(tempTime);
             mRepository.updateTask(mTask);
             updateUI();
             return;
@@ -143,6 +146,7 @@ public class EditTaskFragment extends DialogFragment {
             mTask.setTitle(mTaskDescription.getText().toString());
             mTask.setDescription(mTaskDescription.getText().toString());
             stateChangeListener();
+            mTask.getDate().setTime(tempTime);
             mRepository.updateTask(mTask);
             updateUI();
             return;
@@ -211,6 +215,7 @@ public class EditTaskFragment extends DialogFragment {
         }
         if (requestCode == REQUEST_CODE_TIME_PICKER) {
             Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TASK_TIME);
+            tempTime = date.getTime();
 
             mDate.setTime(date.getTime());
             mTask.setDate(mDate);

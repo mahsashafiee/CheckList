@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:id="@+id/date_picker"
     android:foregroundGravity="center"
+    android:datePickerMode="calendar"
     tools:context=".controller.DatePickerFragment">
 
 </DatePicker>

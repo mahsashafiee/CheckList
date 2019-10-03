@@ -72,7 +72,7 @@ public class SignUpFragment extends Fragment {
 
                 if (validateUsername())
                     if (validatePassword())
-                        if (confirmPassword()) {
+                        if (confirmedPassword()) {
                             sendResult();
                         }
 
@@ -152,7 +152,7 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    public boolean confirmPassword() {
+    public boolean confirmedPassword() {
 
         String password = mConfirmPass.getText().toString().trim();
         if (password.isEmpty()) {

@@ -44,12 +44,12 @@ public class TaskPagerAdapter extends FragmentStatePagerAdapter {
         return mListFragments.size();
     }
 
-    @Override
+/*    @Override
     public int getItemPosition(@NonNull Object object) {
         TaskListFragment fragment = ((TaskListFragment) object);
         fragment.updateUI();
         return super.getItemPosition(object);
-    }
+    }*/
 
     @Nullable
     @Override

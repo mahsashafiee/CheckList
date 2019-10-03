@@ -21,8 +21,6 @@ import android.widget.TimePicker;
 
 import com.example.checklist.R;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -36,6 +34,7 @@ public class TimePickerFragment extends DialogFragment {
 
     TimePicker mTimePicker;
     Date TaskTime;
+    private Calendar mCalendar;
 
     public static TimePickerFragment newInstance(Date date) {
 
@@ -57,6 +56,11 @@ public class TimePickerFragment extends DialogFragment {
         super.onCreate(savedInstanceState);
 
         TaskTime = (Date) getArguments().getSerializable(ARGS_TASK_TIME);
+        mCalendar = Calendar.getInstance();
+        mCalendar.setTime(TaskTime);
+
+        if (mCalendar.get(Calendar.HOUR_OF_DAY) == 12)
+            mCalendar.setTime(new Date());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -65,7 +69,7 @@ public class TimePickerFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
         View view = layoutInflater
-                .inflate(R.layout.fragment_time, null, false);
+                .inflate(R.layout.fragment_time_picker, null, false);
 
         mTimePicker = view.findViewById(R.id.time_picker);
         initTimePicker();
@@ -85,20 +89,42 @@ public class TimePickerFragment extends DialogFragment {
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void initTimePicker() {
 
-        DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
-        String strDate = dateFormat.format(TaskTime);
 
-        String[] time = strDate.split(":");
+        if (Build.VERSION.SDK_INT < 23) {
 
-        mTimePicker.setHour(Integer.parseInt(time[0]));
-        mTimePicker.setMinute(Integer.parseInt(time[1]));
+            mTimePicker.setCurrentHour(mCalendar.get(Calendar.HOUR_OF_DAY));
+            mTimePicker.setCurrentMinute(mCalendar.get(Calendar.MINUTE));
+        }else {
+
+            mTimePicker.setHour(mCalendar.get(Calendar.HOUR_OF_DAY));
+            mTimePicker.setMinute(mCalendar.get(Calendar.MINUTE));
+
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void sendResult() {
 
-        TaskTime.setHours(mTimePicker.getHour());
-        TaskTime.setMinutes(mTimePicker.getMinute());
+        Calendar calendar = Calendar.getInstance();
+        int getHour;
+        int getMinute;
+
+        if (Build.VERSION.SDK_INT < 23) {
+            getHour = mTimePicker.getCurrentHour();
+            getMinute = mTimePicker.getCurrentMinute();
+
+            calendar.set(Calendar.HOUR_OF_DAY, mTimePicker.getCurrentHour());
+            calendar.set(Calendar.MINUTE, mTimePicker.getCurrentMinute());
+        } else {
+            getHour = mTimePicker.getHour();
+            getMinute = mTimePicker.getMinute();
+
+            calendar.set(Calendar.HOUR_OF_DAY, mTimePicker.getHour());
+            calendar.set(Calendar.MINUTE, mTimePicker.getMinute());
+        }
+
+        TaskTime.setHours(getHour);
+        TaskTime.setMinutes(getMinute);
 
         Intent intent = new Intent();
         intent.putExtra(EXTRA_TASK_TIME, TaskTime);
