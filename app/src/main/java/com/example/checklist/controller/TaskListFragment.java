@@ -1,6 +1,8 @@
 package com.example.checklist.controller;
 
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -142,6 +146,25 @@ public class TaskListFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.my_menu_option, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.item_menu_search);
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     @Override
@@ -191,7 +214,7 @@ public class TaskListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
 
         } else {
-            mAdapter = new TaskRecyclerViewAdapter(getActivity(), this, mTasks);
+            mAdapter = new TaskRecyclerViewAdapter(getActivity(), this, mTasks, mID);
             mRecyclerView.setAdapter(mAdapter);
         }
 
@@ -215,7 +238,7 @@ public class TaskListFragment extends Fragment {
         mAddTask = view.findViewById(R.id.addTask);
         mRecyclerView = view.findViewById(R.id.task_list_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new TaskRecyclerViewAdapter(getActivity(), TaskListFragment.this, mTasks);
+        mAdapter = new TaskRecyclerViewAdapter(getActivity(), TaskListFragment.this, mTasks, mID);
         mRecyclerView.setAdapter(mAdapter);
     }
 
