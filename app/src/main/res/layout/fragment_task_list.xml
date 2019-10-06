@@ -44,7 +44,7 @@
         android:src="@drawable/ic_action_task_plus"
         app:maxImageSize="24dp"
         android:contentDescription="@string/add"
-        android:layout_margin="16dp"/>
+        android:layout_margin="8dp"/>
 
 
 

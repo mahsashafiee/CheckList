@@ -2,65 +2,64 @@ package com.example.checklist.model;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checklist.R;
 import com.example.checklist.controller.EditTaskFragment;
-import com.example.checklist.controller.MainActivity;
 import com.example.checklist.controller.TaskListFragment;
 import com.example.checklist.repository.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.TaskViewHolder> {
+public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.TaskViewHolder> implements Filterable {
 
     private static final String TAG_EDIT_TASK = "editTaskFragment";
     private static final int REQUEST_CODE_EDIT_TASK = 2;
     private List<Task> mTasks;
+    private List<Task> mTasksClone;
     private Context mContext;
+    private State mState;
+    private UUID mUserId;
     private TaskListFragment mParentFragment;
 
-    public TaskRecyclerViewAdapter(Context context, TaskListFragment fragment, List<Task> tasks) {
+    public TaskRecyclerViewAdapter(Context context, TaskListFragment fragment, List<Task> tasks, UUID userId) {
         mContext = context;
         mParentFragment = fragment;
         mTasks = tasks;
+        this.mUserId = userId;
+        if (tasks != null) {
+            mTasksClone = new ArrayList<>(tasks);
+            mState = tasks.get(0).getState();
+        }
+
     }
 
     public void setTasks(List<Task> tasks) {
         mTasks = tasks;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-
-        if (position % 2 != 0) {
-            if (mTasks.get(position).getState().equals(State.DOING))
-                return 10;
-            else if (mTasks.get(position).getState().equals(State.DONE))
-                return 11;
-            return 12;
-        } else {
-            if (mTasks.get(position).getState().equals(State.DOING))
-                return 20;
-            else if (mTasks.get(position).getState().equals(State.DONE))
-                return 21;
-            return 22;
-        }
+    public boolean isAdmin() {
+        User user = Repository.getInstance(mContext.getApplicationContext()).getUser(mUserId);
+        if (user.getUsername().equals("admin") && user.getPassword().equals(Hash.MD5("123456")))
+            return true;
+        return false;
     }
+
 
     @NonNull
     @Override
@@ -72,53 +71,9 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, final int position) {
 
-        holder.mTvTaskTitle.setText(mTasks.get(position).getTitle());
-        holder.mTvTaskDescription.setText(mTasks.get(position).getDescription());
-        holder.mTvTaskDate.setText(mTasks.get(position).getSimpleDate() + "  " + mTasks.get(position).getSimpleTime());
-        UUID userID = Repository.getInstance(mContext.getApplicationContext()).getUsername(mTasks.get(position).getID());
-        holder.mTvTaskUsername.setText("("+Repository.getInstance(mContext.getApplicationContext()).getUser(userID).getUsername()+")");
-        if (!mTasks.get(position).getTitle().isEmpty())
-            holder.mTvIcon.setText(mTasks.get(position).getTitle().charAt(0) + "");
+        holder.bind(mTasks.get(position), position);
 
 
-        switch (holder.getItemViewType()) {
-            case 10: {
-                holder.mCardView.setBackgroundResource(R.drawable.background_odd_item);
-                holder.mTvTaskTitle.setPaintFlags(holder.mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                holder.mTvIcon.setBackgroundResource(R.drawable.task_icon_doing);
-                break;
-            }
-            case 11: {
-                holder.mCardView.setBackgroundResource(R.drawable.background_odd_item);
-                holder.mTvTaskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.mTvIcon.setBackgroundResource(R.drawable.task_icon_done);
-                break;
-            }
-            case 12: {
-                holder.mCardView.setBackgroundResource(R.drawable.background_odd_item);
-                holder.mTvTaskTitle.setPaintFlags(holder.mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                holder.mTvIcon.setBackgroundResource(R.drawable.task_icon_to_do);
-                break;
-            }
-            case 20: {
-                holder.mCardView.setBackgroundResource(R.drawable.background_even_item);
-                holder.mTvTaskTitle.setPaintFlags(holder.mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                holder.mTvIcon.setBackgroundResource(R.drawable.task_icon_doing);
-                break;
-            }
-            case 21: {
-                holder.mCardView.setBackgroundResource(R.drawable.background_even_item);
-                holder.mTvTaskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                holder.mTvIcon.setBackgroundResource(R.drawable.task_icon_done);
-                break;
-            }
-            case 22: {
-                holder.mCardView.setBackgroundResource(R.drawable.background_even_item);
-                holder.mTvTaskTitle.setPaintFlags(holder.mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                holder.mTvIcon.setBackgroundResource(R.drawable.task_icon_to_do);
-                break;
-            }
-        }
         holder.mIvTaskDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,7 +114,6 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         });
 
 
-
     }
 
     @Override
@@ -168,6 +122,52 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             return mTasks.size();
         return 0;
     }
+
+    Filter taskFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+            List<Task> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+
+                if (isAdmin())
+                    mTasksClone = Repository.getInstance(mContext.getApplicationContext()).getTasks(mState);
+                else
+                    mTasksClone = Repository.getInstance(mContext.getApplicationContext()).getTasks(mUserId, mState);
+
+                filteredList.addAll(mTasksClone);
+            } else {
+                String filter = constraint.toString().toLowerCase().trim();
+                for (Task task : mTasksClone) {
+                    if (task.getTitle().toLowerCase().contains(filter)) {
+                        filteredList.add(task);
+                    }
+                }
+            }
+
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (mTasks != null) {
+                mTasks.clear();
+
+                mTasks.addAll((List) results.values);
+
+            }
+            notifyDataSetChanged();
+        }
+    };
+
+    @Override
+    public Filter getFilter() {
+        return taskFilter;
+    }
+
 
     public class TaskViewHolder extends RecyclerView.ViewHolder {
 
@@ -190,5 +190,52 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             mParentLayout = itemView.findViewById(R.id.item_parent_layout);
 
         }
+
+        public void bind(Task task, int position) {
+
+            mTvTaskTitle.setText(task.getTitle());
+            mTvTaskDescription.setText(task.getDescription());
+            mTvTaskDate.setText(task.getSimpleDate() + "  " + task.getSimpleTime());
+            UUID userID = Repository.getInstance(mContext.getApplicationContext()).getUsername(task.getID());
+            if (isAdmin())
+                mTvTaskUsername.setText("(" + Repository.getInstance(mContext.getApplicationContext()).getUser(userID).getUsername() + ")");
+
+            if (!task.getTitle().isEmpty())
+                mTvIcon.setText(task.getTitle().charAt(0) + "");
+
+            if (position % 2 != 0) {
+                if (task.getState().equals(State.DOING)) {
+                    mCardView.setBackgroundResource(R.drawable.background_odd_item);
+                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    mTvIcon.setBackgroundResource(R.drawable.task_icon_doing);
+                } else if (mTasks.get(position).getState().equals(State.DONE)) {
+                    mCardView.setBackgroundResource(R.drawable.background_odd_item);
+                    mTvTaskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    mTvIcon.setBackgroundResource(R.drawable.task_icon_done);
+
+                } else {
+                    mCardView.setBackgroundResource(R.drawable.background_odd_item);
+                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    mTvIcon.setBackgroundResource(R.drawable.task_icon_to_do);
+                }
+
+            } else {
+                if (task.getState().equals(State.DOING)) {
+                    mCardView.setBackgroundResource(R.drawable.background_even_item);
+                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    mTvIcon.setBackgroundResource(R.drawable.task_icon_doing);
+                } else if (mTasks.get(position).getState().equals(State.DONE)) {
+                    mCardView.setBackgroundResource(R.drawable.background_even_item);
+                    mTvTaskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                    mTvIcon.setBackgroundResource(R.drawable.task_icon_done);
+
+                } else {
+                    mCardView.setBackgroundResource(R.drawable.background_even_item);
+                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+                    mTvIcon.setBackgroundResource(R.drawable.task_icon_to_do);
+                }
+            }
+        }
     }
+
 }
