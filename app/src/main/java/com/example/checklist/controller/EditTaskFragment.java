@@ -27,6 +27,7 @@ import com.example.checklist.repository.Repository;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -43,7 +44,7 @@ public class EditTaskFragment extends DialogFragment {
 
     private Task mTask;
     private Date mDate;
-    private long tempTime;
+    private Date tempTime;
     private EditText mTaskTitle, mTaskDescription;
     private Button mButtonDate, mButtonTime;
     private Repository mRepository;
@@ -72,7 +73,7 @@ public class EditTaskFragment extends DialogFragment {
         mRepository = Repository.getInstance(getActivity().getApplicationContext());
         mTask = mRepository.getTask(mTaskId);
         mDate = mTask.getDate();
-        tempTime = mDate.getTime();
+        tempTime = mTask.getDate();
 
     }
 
@@ -136,7 +137,7 @@ public class EditTaskFragment extends DialogFragment {
             mTask.setDescription(mTaskDescription.getText().toString());
             mTask.setTitle(mTaskTitle.getText().toString());
             stateChangeListener();
-            mTask.getDate().setTime(tempTime);
+            mTask.setDate(mDate);
             mRepository.updateTask(mTask);
             updateUI();
             return;
@@ -146,7 +147,7 @@ public class EditTaskFragment extends DialogFragment {
             mTask.setTitle(mTaskDescription.getText().toString());
             mTask.setDescription(mTaskDescription.getText().toString());
             stateChangeListener();
-            mTask.getDate().setTime(tempTime);
+            mTask.setDate(mDate);
             mRepository.updateTask(mTask);
             updateUI();
             return;
@@ -207,6 +208,8 @@ public class EditTaskFragment extends DialogFragment {
 
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
             mDate = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_TASK_DATE);
+            mDate.setHours(tempTime.getHours());
+            mDate.setMinutes(tempTime.getMinutes());
 
             mTask.setDate(mDate);
             DateFormat df = new SimpleDateFormat("dd MMM yyyy");
@@ -214,10 +217,10 @@ public class EditTaskFragment extends DialogFragment {
 
         }
         if (requestCode == REQUEST_CODE_TIME_PICKER) {
-            Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TASK_TIME);
-            tempTime = date.getTime();
+            tempTime = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TASK_TIME);
+            mDate.setHours(tempTime.getHours());
+            mDate.setMinutes(tempTime.getMinutes());
 
-            mDate.setTime(date.getTime());
             mTask.setDate(mDate);
 
             DateFormat dateFormat = new SimpleDateFormat("hh:mm a");

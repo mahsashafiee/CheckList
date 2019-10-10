@@ -28,20 +28,22 @@ import com.google.android.material.textfield.TextInputLayout;
  */
 public class SignUpFragment extends Fragment {
 
-    public static final String ARGS_SIGN_UP = "args_sign_up";
-    private User mUser;
+    public static final String ARGS_USERNAME = "args_username";
+    public static final String ARGS_PASSWORD = "args_password";
+    private User mUser = new User();
     private Repository mRepository;
     private EditText mUsername, mPassword, mConfirmPass;
     private TextInputLayout mFormUsername, mFormPassword, mFormConfirm;
     private Button mSignUp;
     private TextView mLogin;
 
-    public static SignUpFragment newInstance(User user) {
+    public static SignUpFragment newInstance(String username, String password) {
 
         Bundle args = new Bundle();
 
         SignUpFragment fragment = new SignUpFragment();
-        args.putSerializable(ARGS_SIGN_UP, user);
+        args.putSerializable(ARGS_USERNAME, username);
+        args.putSerializable(ARGS_PASSWORD, password);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,7 +52,8 @@ public class SignUpFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUser = (User) getArguments().getSerializable(ARGS_SIGN_UP);
+        mUser.setUsername(getArguments().getString(ARGS_USERNAME));
+        mUser.setPassword(getArguments().getString(ARGS_PASSWORD));
     }
 
     public SignUpFragment() {
@@ -93,8 +96,9 @@ public class SignUpFragment extends Fragment {
 
     private void sendResult() {
 
-        User user = new User(mUsername.getText().toString(), mPassword.getText().toString());
-        user.setPassword(Hash.MD5(user.getPassword()));
+        User user = new User();
+        user.setUsername(mUsername.getText().toString());
+        user.setPassword(Hash.MD5(mPassword.getText().toString()));
         mRepository.insertUser(user);
         Intent intent = new Intent();
         getTargetFragment().onActivityResult(LoginFragment.REQUEST_CODE_SIGN_UP, Activity.RESULT_OK, intent);

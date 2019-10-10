@@ -13,6 +13,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,7 +33,7 @@ import com.example.checklist.R;
 import com.example.checklist.model.Hash;
 import com.example.checklist.model.State;
 import com.example.checklist.model.Task;
-import com.example.checklist.model.TaskRecyclerViewAdapter;
+import com.example.checklist.model.TaskAdapter;
 import com.example.checklist.model.User;
 import com.example.checklist.repository.Repository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,7 +51,7 @@ public class TaskListFragment extends Fragment {
     private static final String TAG_TASK_DETAIL = "taskDetail";
     private FloatingActionButton mAddTask;
     private RecyclerView mRecyclerView;
-    private TaskRecyclerViewAdapter mAdapter;
+    private TaskAdapter mAdapter;
     private List<Task> mTasks = new ArrayList<>();
     private UUID mID;
     private State mState;
@@ -138,6 +140,7 @@ public class TaskListFragment extends Fragment {
             }
         });
 
+        Log.d(TAG, "onCreateView: " + mState.toString() + " called!");
         return view;
     }
 
@@ -165,6 +168,8 @@ public class TaskListFragment extends Fragment {
                 return false;
             }
         });
+
+
     }
 
     @Override
@@ -214,11 +219,16 @@ public class TaskListFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
 
         } else {
-            mAdapter = new TaskRecyclerViewAdapter(getActivity(), this, mTasks, mID);
+            mAdapter = new TaskAdapter(getActivity(), this, mTasks, mID);
             mRecyclerView.setAdapter(mAdapter);
         }
 
         setBackgroundVisible();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
     }
 
     public void setBackgroundVisible() {
@@ -238,7 +248,7 @@ public class TaskListFragment extends Fragment {
         mAddTask = view.findViewById(R.id.addTask);
         mRecyclerView = view.findViewById(R.id.task_list_recyclerView);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new TaskRecyclerViewAdapter(getActivity(), TaskListFragment.this, mTasks, mID);
+        mAdapter = new TaskAdapter(getActivity(), TaskListFragment.this, mTasks, mID);
         mRecyclerView.setAdapter(mAdapter);
     }
 
