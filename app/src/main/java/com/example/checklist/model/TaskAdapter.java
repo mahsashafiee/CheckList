@@ -23,34 +23,36 @@ import com.example.checklist.controller.TaskListFragment;
 import com.example.checklist.repository.Repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.TaskViewHolder> implements Filterable {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> implements Filterable {
 
     private static final String TAG_EDIT_TASK = "editTaskFragment";
     private static final int REQUEST_CODE_EDIT_TASK = 2;
     private List<Task> mTasks;
-    private List<Task> mTasksClone;
+    private List<Task> mTasksFull;
     private Context mContext;
-    private State mState;
     private UUID mUserId;
     private TaskListFragment mParentFragment;
 
-    public TaskRecyclerViewAdapter(Context context, TaskListFragment fragment, List<Task> tasks, UUID userId) {
+    public TaskAdapter(Context context, TaskListFragment fragment, List<Task> tasks, UUID userId) {
         mContext = context;
         mParentFragment = fragment;
         mTasks = tasks;
         this.mUserId = userId;
         if (tasks != null) {
-            mTasksClone = new ArrayList<>(tasks);
-            mState = tasks.get(0).getState();
+            mTasksFull = new ArrayList<>(tasks);
         }
 
     }
 
     public void setTasks(List<Task> tasks) {
         mTasks = tasks;
+        if (tasks != null)
+            mTasksFull = new ArrayList<>(tasks);
+        notifyDataSetChanged();
     }
 
     public boolean isAdmin() {
@@ -85,7 +87,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
                         "Yes",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                Repository.getInstance(mContext.getApplicationContext()).deleteTask(mTasks.get(position).getID());
+                                Repository.getInstance(mContext.getApplicationContext()).deleteTask(mTasks.get(position).getUUID());
                                 mParentFragment.updateUI();
                                 dialog.cancel();
                             }
@@ -107,7 +109,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         holder.mIvTaskEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(mTasks.get(position).getID());
+                EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(mTasks.get(position).getUUID());
                 editTaskFragment.setTargetFragment(mParentFragment, REQUEST_CODE_EDIT_TASK);
                 editTaskFragment.show(mParentFragment.getFragmentManager(), TAG_EDIT_TASK);
             }
@@ -123,49 +125,47 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         return 0;
     }
 
-    Filter taskFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-
-            List<Task> filteredList = new ArrayList<>();
-
-            if (constraint == null || constraint.length() == 0) {
-
-                if (isAdmin())
-                    mTasksClone = Repository.getInstance(mContext.getApplicationContext()).getTasks(mState);
-                else
-                    mTasksClone = Repository.getInstance(mContext.getApplicationContext()).getTasks(mUserId, mState);
-
-                filteredList.addAll(mTasksClone);
-            } else {
-                String filter = constraint.toString().toLowerCase().trim();
-                for (Task task : mTasksClone) {
-                    if (task.getTitle().toLowerCase().contains(filter)) {
-                        filteredList.add(task);
-                    }
-                }
-            }
-
-            FilterResults results = new FilterResults();
-            results.values = filteredList;
-            return results;
-        }
-
-        @Override
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (mTasks != null) {
-                mTasks.clear();
-
-                mTasks.addAll((List) results.values);
-
-            }
-            notifyDataSetChanged();
-        }
-    };
-
     @Override
     public Filter getFilter() {
-        return taskFilter;
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+
+                List<Task> filteredList = new ArrayList<>();
+
+                if (constraint == null || constraint.length() == 0) {
+                    filteredList.addAll(mTasksFull);
+
+                } else {
+                    String filter = constraint.toString().toLowerCase().trim();
+                    for (Task task : mTasksFull) {
+                        if (task.getTitle().toLowerCase().contains(filter) ||
+                                task.getDescription().toLowerCase().contains(filter) ||
+                                task.getSimpleDate().toLowerCase().contains(filter) ||
+                                task.getSimpleTime().toLowerCase().contains(filter)) {
+                            filteredList.add(task);
+                        }
+                    }
+                }
+
+                FilterResults results = new FilterResults();
+                results.values = filteredList;
+                return results;
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                if (mTasks != null)
+                    mTasks.clear();
+                else
+                    mTasks = new ArrayList<>();
+
+                if (results.values != null)
+                    mTasks.addAll((Collection<? extends Task>) results.values);
+                notifyDataSetChanged();
+            }
+        };
     }
 
 
@@ -196,9 +196,9 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
             mTvTaskTitle.setText(task.getTitle());
             mTvTaskDescription.setText(task.getDescription());
             mTvTaskDate.setText(task.getSimpleDate() + "  " + task.getSimpleTime());
-            UUID userID = Repository.getInstance(mContext.getApplicationContext()).getUsername(task.getID());
+            String username = Repository.getInstance(mContext.getApplicationContext()).getUsername(task.getUserId());
             if (isAdmin())
-                mTvTaskUsername.setText("(" + Repository.getInstance(mContext.getApplicationContext()).getUser(userID).getUsername() + ")");
+                mTvTaskUsername.setText("(" + username + ")");
 
             if (!task.getTitle().isEmpty())
                 mTvIcon.setText(task.getTitle().charAt(0) + "");

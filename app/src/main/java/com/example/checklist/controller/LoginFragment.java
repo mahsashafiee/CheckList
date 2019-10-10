@@ -65,8 +65,9 @@ public class LoginFragment extends Fragment {
         mCreateAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User user = new User(mUsername.getText().toString(), mPassword.getText().toString());
-                SignUpFragment signUpFragment = SignUpFragment.newInstance(user);
+                String username = mUsername.getText().toString();
+                String password = mPassword.getText().toString();
+                SignUpFragment signUpFragment = SignUpFragment.newInstance(username, password);
                 signUpFragment.setTargetFragment(LoginFragment.this, REQUEST_CODE_SIGN_UP);
                 FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 fragmentManager.beginTransaction().add(R.id.fragment_container, signUpFragment, TAG_SIGN_UP).commit();
@@ -79,8 +80,9 @@ public class LoginFragment extends Fragment {
             public void onClick(View view) {
                 if (validateUsername()) {
                     if (validatePassword()) {
-                        Intent intent = TaskPagerActivity.newIntent(getActivity(), mUser.getID());
+                        Intent intent = TaskPagerActivity.newIntent(getActivity(), mUser.getId());
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 }
             }

@@ -5,98 +5,144 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
-import java.io.Serializable;
-import java.sql.Time;
-import java.text.DateFormat;
+import com.example.checklist.greendao.StateConverter;
+import com.example.checklist.greendao.UUIDConverter;
+
+import org.greenrobot.greendao.annotation.Convert;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Index;
+import org.greenrobot.greendao.annotation.Property;
+import org.greenrobot.greendao.annotation.Transient;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+import org.greenrobot.greendao.annotation.Generated;
 
-public class Task implements Serializable {
-    private String mTitle;
-    private State mState;
-    private UUID mUUID;
-    private Date mDate;
-    private String mDescription /*"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet,
-     consectetur, adipisci velit. There is no one who loves pain itself,
-     who seeks after it and wants to have it."*/;
+@Entity (nameInDb = "task")
+public class Task {
 
+    @Id(autoincrement = true)
+    private Long _id;
+
+    @Property(nameInDb = "user_uuid")
+    private String userId;
+
+    @Property(nameInDb = "title")
+    private String title;
+
+    @Property(nameInDb = "state")
+    @Convert(converter = StateConverter.class, columnType = Integer.class)
+    private State state;
+
+    @Property(nameInDb = "task_uuid")
+    @Index(unique = true)
+    @Convert(converter = UUIDConverter.class, columnType = String.class)
+    private UUID UUID;
+
+    @Property(nameInDb = "date")
+    private Date date;
+
+    @Property(nameInDb = "description")
+    private String description;
+
+    @Transient
     private SimpleDateFormat mFormat;
 
     public Task(UUID UUID) {
-        mUUID = UUID;
+        this.UUID = UUID;
     }
 
-    public String getDescription() {
-        return mDescription;
+    public Task(String userId) {
+        this.userId = userId;
+        UUID = java.util.UUID.randomUUID();
+        date = new Date();
     }
 
-    public void setDescription(String description) {
-        mDescription = description;
+    @Generated(hash = 699958568)
+    public Task(Long _id, String userId, String title, State state, UUID UUID,
+            Date date, String description) {
+        this._id = _id;
+        this.userId = userId;
+        this.title = title;
+        this.state = state;
+        this.UUID = UUID;
+        this.date = date;
+        this.description = description;
     }
 
+    @Generated(hash = 733837707)
     public Task() {
-        mUUID = UUID.randomUUID();
-        mDate = new Date();
-    }
-
-    public void setDate(Date date) {
-        mDate = date;
-    }
-
-    public Date getDate() {
-        return mDate;
-    }
-
-    public String getTitle() {
-        return mTitle;
-    }
-
-    public void setTitle(String title) {
-        mTitle = title;
-    }
-
-    public State getState() {
-        return mState;
-    }
-
-    public void setState(State state) {
-        mState = state;
-    }
-
-    public UUID getID() {
-        return mUUID;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return "Task{" +
-                "mTitle='" + mTitle + '\'' +
-                ", mState=" + mState +
-                '}';
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return Objects.equals(mUUID, task.mUUID);
     }
 
     public String getSimpleDate(){
         mFormat = new SimpleDateFormat("dd MMM yyyy");
-        return mFormat.format(mDate);
+        return mFormat.format(date);
 
     }
 
     public String getSimpleTime(){
         mFormat = new SimpleDateFormat("hh:mm a");
-        return mFormat.format(mDate);
+        return mFormat.format(date);
 
+    }
+
+    public Long get_id() {
+        return this._id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
+    }
+
+    public String getUserId() {
+        return this.userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getTitle() {
+        return this.title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public State getState() {
+        return this.state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public UUID getUUID() {
+        return this.UUID;
+    }
+
+    public void setUUID(UUID UUID) {
+        this.UUID = UUID;
+    }
+
+    public Date getDate() {
+        return this.date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

@@ -43,7 +43,7 @@ public class TaskDetailFragment extends DialogFragment {
 
     private Task mTask;
     private Date mDate;
-    private long tempTime;
+    private Date tempTime;
     private CheckBox mTaskState;
     private EditText mTaskTitle, mTaskDescription;
     private Button mButtonDate, mButtonTime;
@@ -69,10 +69,10 @@ public class TaskDetailFragment extends DialogFragment {
         mUserId = ((UUID) getArguments().getSerializable(ARGS_USER_UUID_FROM_LIST));
 
         mRepository = Repository.getInstance(getActivity().getApplicationContext());
-        mTask = new Task();
+        mTask = new Task(mUserId.toString());
         mTask.setState(((State) getArguments().getSerializable(ARGS_TASK_STATE_FROM_LIST)));
         mDate = mTask.getDate();
-        tempTime = mDate.getTime();
+        tempTime = mTask.getDate();
     }
 
     public TaskDetailFragment() {
@@ -132,8 +132,8 @@ public class TaskDetailFragment extends DialogFragment {
         if (!mTaskTitle.getText().toString().isEmpty() && !mTaskDescription.getText().toString().isEmpty()) {
             mTask.setDescription(mTaskDescription.getText().toString());
             mTask.setTitle(mTaskTitle.getText().toString());
-            mTask.getDate().setTime(tempTime);
-            mRepository.insertTask(mUserId, mTask);
+            mTask.setDate(mDate);
+            mRepository.insertTask(mTask);
             updateUI();
             return;
         } else if (mTaskTitle.getText().toString().isEmpty() && !(mTaskDescription.getText().toString().isEmpty())) {
@@ -142,8 +142,8 @@ public class TaskDetailFragment extends DialogFragment {
             else
                 mTask.setTitle(mTaskDescription.getText().toString());
             mTask.setDescription(mTaskDescription.getText().toString());
-            mTask.getDate().setTime(tempTime);
-            mRepository.insertTask(mUserId, mTask);
+            mTask.setDate(mDate);
+            mRepository.insertTask(mTask);
             updateUI();
             return;
         }else if (mTaskDescription.getText().toString().isEmpty())
@@ -182,6 +182,8 @@ public class TaskDetailFragment extends DialogFragment {
 
         if (requestCode == REQUEST_CODE_DATE_PICKER) {
             mDate = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_TASK_DATE);
+            mDate.setHours(tempTime.getHours());
+            mDate.setMinutes(tempTime.getMinutes());
 
             mTask.setDate(mDate);
             DateFormat df = new SimpleDateFormat("dd MMM yyyy");
@@ -189,10 +191,9 @@ public class TaskDetailFragment extends DialogFragment {
 
         }
         if (requestCode == REQUEST_CODE_TIME_PICKER) {
-            Date date = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TASK_TIME);
-            tempTime = date.getTime();
-
-            mDate.setTime(date.getTime());
+            tempTime = (Date) data.getSerializableExtra(TimePickerFragment.EXTRA_TASK_TIME);
+            mDate.setHours(tempTime.getHours());
+            mDate.setMinutes(tempTime.getMinutes());
             mTask.setDate(mDate);
 
             DateFormat dateFormat = new SimpleDateFormat("hh:mm a");

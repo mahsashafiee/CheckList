@@ -34,6 +34,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingBottom="6dp"
         android:id="@+id/task_list_recyclerView"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -43,8 +44,10 @@
         android:layout_gravity="end|bottom"
         android:src="@drawable/ic_action_task_plus"
         app:maxImageSize="24dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="6dp"
         android:contentDescription="@string/add"
-        android:layout_margin="8dp"/>
+        android:layout_marginRight="6dp" />
 
 
 
