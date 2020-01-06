@@ -138,32 +138,32 @@ public class SignUpFragment extends Fragment {
             return;
 
         if (requestCode == PICK_IMAGE) {
-                Uri selectedImage = data.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
-                Cursor cursor = getActivity().getContentResolver().query(selectedImage,
-                        filePathColumn, null, null, null);
-                cursor.moveToFirst();
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
 
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                String picturePath = cursor.getString(columnIndex);
-                cursor.close();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
 
-                Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
-                mProfileImage.setImageBitmap(bitmap);
-
-
-                try {
-                    OutputStream stream = new FileOutputStream(mPhotoFile);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
-                    stream.flush();
-                    stream.close();
+            Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+            mProfileImage.setImageBitmap(bitmap);
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                OutputStream stream = new FileOutputStream(mPhotoFile);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
+                stream.flush();
+                stream.close();
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
+        }
 
 
     }

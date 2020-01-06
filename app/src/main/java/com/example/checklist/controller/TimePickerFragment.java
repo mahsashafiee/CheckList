@@ -89,7 +89,7 @@ public class TimePickerFragment extends DialogFragment {
 
             mTimePicker.setCurrentHour(mCalendar.get(Calendar.HOUR_OF_DAY));
             mTimePicker.setCurrentMinute(mCalendar.get(Calendar.MINUTE));
-        }else {
+        } else {
 
             mTimePicker.setHour(mCalendar.get(Calendar.HOUR_OF_DAY));
             mTimePicker.setMinute(mCalendar.get(Calendar.MINUTE));

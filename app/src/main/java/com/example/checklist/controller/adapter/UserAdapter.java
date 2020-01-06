@@ -62,7 +62,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         private TextView mUsername, mTaskCount;
         private ImageButton mButtonDelete;
 
-        public UserHolder(@NonNull View itemView) {
+        UserHolder(@NonNull View itemView) {
             super(itemView);
             mProfileImage = itemView.findViewById(R.id.profile_image);
             mTaskCount = itemView.findViewById(R.id.task_numbers);
@@ -70,40 +70,32 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
             mButtonDelete = itemView.findViewById(R.id.item_user_delete);
 
             itemView.setOnClickListener(this);
-            mButtonDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
-                    builder1.setMessage("Are you sure you want to delete " + mUser.getUsername() + "?");
-                    builder1.setCancelable(true);
 
-                    builder1.setPositiveButton(
-                            "Yes",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+            mButtonDelete.setOnClickListener(v -> {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mActivity);
+                builder1.setMessage("Are you sure you want to delete " + mUser.getUsername() + "?");
+                builder1.setCancelable(true);
 
-                                    Repository.getInstance(mActivity).deleteUser(mUser.get_id());
-                                    mUserList = Repository.getInstance(mActivity).getUsers();
-                                    notifyDataSetChanged();
-                                    dialog.cancel();
-                                }
-                            });
+                builder1.setPositiveButton(
+                        "Yes",
+                        (dialog, id) -> {
 
-                    builder1.setNegativeButton(
-                            "No",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
+                            Repository.getInstance(mActivity).deleteUser(mUser.get_id());
+                            mUserList = Repository.getInstance(mActivity).getUsers();
+                            notifyDataSetChanged();
+                            dialog.cancel();
+                        });
 
-                    AlertDialog alert11 = builder1.create();
-                    alert11.show();
-                }
+                builder1.setNegativeButton(
+                        "No",
+                        (dialog, id) -> dialog.cancel());
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
             });
         }
 
-        public void bind(Activity activity, User user) {
+        void bind(Activity activity, User user) {
             mUser = user;
             File photoFile = Repository.getInstance(activity).getPhotoFile(mUser);
             Bitmap bitmap = PictureUtils.getScaledBitmap(photoFile.getAbsolutePath(), activity);

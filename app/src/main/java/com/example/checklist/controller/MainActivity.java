@@ -12,7 +12,7 @@ import com.example.checklist.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Intent newIntent(Context context){
+    public static Intent newIntent(Context context) {
 
         Intent intent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment toDoFragment = fragmentManager.findFragmentById(R.id.fragment_container);
 
-        if (toDoFragment == null){
+        if (toDoFragment == null) {
             fragmentManager.beginTransaction().
                     add(R.id.fragment_container, LoginFragment.newInstance()).commit();
         }

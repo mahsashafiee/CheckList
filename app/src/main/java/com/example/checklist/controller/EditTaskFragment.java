@@ -74,7 +74,7 @@ public class EditTaskFragment extends DialogFragment {
         mDate = mTask.getDate();
         mTime = mTask.getDate();
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             mDate = (Date) savedInstanceState.getSerializable(INSTANCE_TASK_DATE);
             mTime = (Date) savedInstanceState.getSerializable(INSTANCE_TASK_TIME);
         }
@@ -97,14 +97,16 @@ public class EditTaskFragment extends DialogFragment {
         initListeners();
 
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                .setPositiveButton(R.string.button_edit, null).setNegativeButton(android.R.string.cancel,null)
+                .setPositiveButton(R.string.button_edit, null).setNegativeButton(android.R.string.cancel, null)
                 .setView(view)
                 .create();
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.setOnShowListener(dialog -> {
             Button buttonP = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
             Button buttonN = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
-            buttonP.setOnClickListener(v -> { if (TaskValidation()) dismiss(); });
+            buttonP.setOnClickListener(v -> {
+                if (TaskValidation()) dismiss();
+            });
 
             buttonN.setOnClickListener(v -> dismiss());
         });
@@ -149,7 +151,7 @@ public class EditTaskFragment extends DialogFragment {
             mRepository.updateTask(mTask);
             updateUI();
             return true;
-        }else
+        } else
             mTaskDescription.setError("Description cannot be empty!!");
         return false;
 

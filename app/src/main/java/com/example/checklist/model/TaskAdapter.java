@@ -1,7 +1,9 @@
 package com.example.checklist.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checklist.R;
@@ -25,23 +26,19 @@ import com.example.checklist.repository.Repository;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> implements Filterable {
-
     private static final String TAG_EDIT_TASK = "editTaskFragment";
     private static final int REQUEST_CODE_EDIT_TASK = 2;
     private List<Task> mTasks;
     private List<Task> mTasksFull;
     private Context mContext;
-    private UUID mUserId;
     private TaskListFragment mParentFragment;
 
-    public TaskAdapter(Context context, TaskListFragment fragment, List<Task> tasks, UUID userId) {
+    public TaskAdapter(Context context, TaskListFragment fragment, List<Task> tasks) {
         mContext = context;
         mParentFragment = fragment;
         mTasks = tasks;
-        this.mUserId = userId;
         if (tasks != null) {
             mTasksFull = new ArrayList<>(tasks);
         }
@@ -55,13 +52,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         notifyDataSetChanged();
     }
 
-    public boolean isAdmin() {
-        User user = Repository.getInstance(mContext.getApplicationContext()).getUser(mUserId);
-        if (user.getUsername().equals("admin") && user.getPassword().equals(Hash.MD5("123456")))
-            return true;
-        return false;
-    }
-
 
     @NonNull
     @Override
@@ -71,52 +61,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder holder, final int position) {
-
-        holder.bind(mTasks.get(position), position);
-
-
-        holder.mIvTaskDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                builder1.setMessage("Are you sure you want to delete " + mTasks.get(position).getTitle() + "?");
-                builder1.setCancelable(true);
-
-                builder1.setPositiveButton(
-                        "Yes",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Repository.getInstance(mContext.getApplicationContext()).deleteTask(mTasks.get(position).getUUID());
-                                mParentFragment.updateUI();
-                                dialog.cancel();
-                            }
-                        });
-
-                builder1.setNegativeButton(
-                        "No",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alert11 = builder1.create();
-                alert11.show();
-
-            }
-        });
-        holder.mIvTaskEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(mTasks.get(position).getUUID());
-                editTaskFragment.setTargetFragment(mParentFragment, REQUEST_CODE_EDIT_TASK);
-                editTaskFragment.show(mParentFragment.getFragmentManager(), TAG_EDIT_TASK);
-            }
-        });
-
-
+    public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
+        holder.bind(mTasks.get(position));
     }
+
 
     @Override
     public int getItemCount() {
@@ -169,72 +117,85 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
 
-    public class TaskViewHolder extends RecyclerView.ViewHolder {
+    public class TaskViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private TextView mTvTaskTitle, mTvTaskDescription, mTvTaskDate, mTvIcon, mTvTaskUsername;
-        private ImageView mIvTaskDelete, mIvTaskEdit;
+        private TextView mTvTaskTitle, mTvTaskDescription, mTvTaskDate;
         private CardView mCardView;
-        private ConstraintLayout mParentLayout;
+        private Task mTask;
 
-        public TaskViewHolder(@NonNull View itemView) {
+        TaskViewHolder(@NonNull View itemView) {
             super(itemView);
 
             mTvTaskTitle = itemView.findViewById(R.id.item_task_title);
-            mTvTaskUsername = itemView.findViewById(R.id.item_task_username);
             mCardView = itemView.findViewById(R.id.item_card_view);
             mTvTaskDate = itemView.findViewById(R.id.item_task_date);
-            mTvIcon = itemView.findViewById(R.id.item_task_icon);
+            ImageView shareTask = itemView.findViewById(R.id.item_task_share);
             mTvTaskDescription = itemView.findViewById(R.id.item_task_description);
-            mIvTaskEdit = itemView.findViewById(R.id.item_task_edit);
-            mIvTaskDelete = itemView.findViewById(R.id.item_task_delete);
-            mParentLayout = itemView.findViewById(R.id.item_parent_layout);
+            ImageView deleteTask = itemView.findViewById(R.id.item_task_delete);
+
+            itemView.setOnClickListener(this);
+
+            deleteTask.setOnClickListener(v -> {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                builder1.setMessage("Are you sure you want to delete " + mTask.getTitle() + "?");
+                builder1.setCancelable(true);
+
+                builder1.setPositiveButton(
+                        "Yes",
+                        (dialog, id) -> {
+                            Repository.getInstance(mContext.getApplicationContext()).deleteTask(mTask.getUUID());
+                            mParentFragment.updateUI();
+                            dialog.cancel();
+                        });
+
+                builder1.setNegativeButton(
+                        "No",
+                        (dialog, id) -> dialog.cancel());
+
+                AlertDialog alert11 = builder1.create();
+                alert11.show();
+            });
+
+            shareTask.setOnClickListener(v -> {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_SUBJECT, mTask.getTitle());
+                intent.putExtra(Intent.EXTRA_TEXT, mTask.getDescription());
+                intent = Intent.createChooser(intent, mContext.getResources().getString(R.string.send_task));
+                mContext.startActivity(intent);
+            });
 
         }
 
-        public void bind(Task task, int position) {
+        @SuppressLint("SetTextI18n")
+        void bind(final Task task) {
+
+            mTask = task;
 
             mTvTaskTitle.setText(task.getTitle());
             mTvTaskDescription.setText(task.getDescription());
             mTvTaskDate.setText(task.getSimpleDate() + "  " + task.getSimpleTime());
-            String username = Repository.getInstance(mContext.getApplicationContext()).getUsername(task.getUserId());
-            if (isAdmin())
-                mTvTaskUsername.setText("(" + username + ")");
 
-            if (!task.getTitle().isEmpty())
-                mTvIcon.setText(task.getTitle().charAt(0) + "");
+            if (task.getState().equals(State.DOING)) {
+                mCardView.setBackgroundResource(R.drawable.task_icon_doing);
+                mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
 
-            if (position % 2 != 0) {
-                if (task.getState().equals(State.DOING)) {
-                    mCardView.setBackgroundResource(R.drawable.background_odd_item);
-                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    mTvIcon.setBackgroundResource(R.drawable.task_icon_doing);
-                } else if (mTasks.get(position).getState().equals(State.DONE)) {
-                    mCardView.setBackgroundResource(R.drawable.background_odd_item);
-                    mTvTaskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                    mTvIcon.setBackgroundResource(R.drawable.task_icon_done);
-
-                } else {
-                    mCardView.setBackgroundResource(R.drawable.background_odd_item);
-                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    mTvIcon.setBackgroundResource(R.drawable.task_icon_to_do);
-                }
+            } else if (task.getState().equals(State.DONE)) {
+                mCardView.setBackgroundResource(R.drawable.task_icon_done);
+                mTvTaskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
 
             } else {
-                if (task.getState().equals(State.DOING)) {
-                    mCardView.setBackgroundResource(R.drawable.background_even_item);
-                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    mTvIcon.setBackgroundResource(R.drawable.task_icon_doing);
-                } else if (mTasks.get(position).getState().equals(State.DONE)) {
-                    mCardView.setBackgroundResource(R.drawable.background_even_item);
-                    mTvTaskTitle.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                    mTvIcon.setBackgroundResource(R.drawable.task_icon_done);
-
-                } else {
-                    mCardView.setBackgroundResource(R.drawable.background_even_item);
-                    mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
-                    mTvIcon.setBackgroundResource(R.drawable.task_icon_to_do);
-                }
+                mCardView.setBackgroundResource(R.drawable.task_icon_to_do);
+                mTvTaskTitle.setPaintFlags(mTvTaskTitle.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
             }
+
+        }
+
+        @Override
+        public void onClick(View v) {
+            EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(mTask.getUUID());
+            editTaskFragment.setTargetFragment(mParentFragment, REQUEST_CODE_EDIT_TASK);
+            editTaskFragment.show(mParentFragment.getFragmentManager(), TAG_EDIT_TASK);
         }
     }
 
