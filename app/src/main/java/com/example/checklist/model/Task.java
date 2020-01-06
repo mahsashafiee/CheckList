@@ -27,8 +27,8 @@ public class Task {
     @Id(autoincrement = true)
     private Long _id;
 
-    @Property(nameInDb = "user_uuid")
-    private String userId;
+    @Property(nameInDb = "user_id")
+    private Long user_id;
 
     @Property(nameInDb = "title")
     private String title;
@@ -51,21 +51,19 @@ public class Task {
     @Transient
     private SimpleDateFormat mFormat;
 
-    public Task(UUID UUID) {
-        this.UUID = UUID;
-    }
 
-    public Task(String userId) {
-        this.userId = userId;
+    public Task(Long userId) {
+        this.user_id = userId;
         UUID = java.util.UUID.randomUUID();
         date = new Date();
     }
 
-    @Generated(hash = 699958568)
-    public Task(Long _id, String userId, String title, State state, UUID UUID,
+
+    @Generated(hash = 1365658026)
+    public Task(Long _id, Long user_id, String title, State state, UUID UUID,
             Date date, String description) {
         this._id = _id;
-        this.userId = userId;
+        this.user_id = user_id;
         this.title = title;
         this.state = state;
         this.UUID = UUID;
@@ -73,9 +71,11 @@ public class Task {
         this.description = description;
     }
 
+
     @Generated(hash = 733837707)
     public Task() {
     }
+
 
     public String getSimpleDate(){
         mFormat = new SimpleDateFormat("dd MMM yyyy");
@@ -89,60 +89,75 @@ public class Task {
 
     }
 
+
     public Long get_id() {
         return this._id;
     }
+
 
     public void set_id(Long _id) {
         this._id = _id;
     }
 
-    public String getUserId() {
-        return this.userId;
+
+    public Long getUser_id() {
+        return this.user_id;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
+
 
     public String getTitle() {
         return this.title;
     }
 
+
     public void setTitle(String title) {
         this.title = title;
     }
+
 
     public State getState() {
         return this.state;
     }
 
+
     public void setState(State state) {
         this.state = state;
     }
+
 
     public UUID getUUID() {
         return this.UUID;
     }
 
+
     public void setUUID(UUID UUID) {
         this.UUID = UUID;
     }
+
 
     public Date getDate() {
         return this.date;
     }
 
+
     public void setDate(Date date) {
         this.date = date;
     }
+
 
     public String getDescription() {
         return this.description;
     }
 
+
     public void setDescription(String description) {
         this.description = description;
     }
+
 
 }

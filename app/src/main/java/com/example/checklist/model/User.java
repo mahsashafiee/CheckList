@@ -17,6 +17,7 @@ import org.greenrobot.greendao.annotation.ToMany;
 import org.greenrobot.greendao.annotation.Unique;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -28,14 +29,13 @@ public class User {
     @Id(autoincrement = true)
     private Long _id;
 
+    @Property(nameInDb = "is_admin")
+    private boolean isAdmin;
+
     @Property(nameInDb = "uuid")
     @Index(unique = true)
     @Convert(converter = UUIDConverter.class, columnType = String.class)
     private UUID id;
-
-    @Unique
-    @Property(nameInDb = "string_uuid")
-    private String userId;
 
     @Property(nameInDb = "username")
     private String username;
@@ -43,11 +43,9 @@ public class User {
     @Property(nameInDb = "password")
     private String password;
 
-    @ToMany(joinProperties = {
-            @JoinProperty(name = "userId", referencedName = "userId")
-    })
+    @ToMany(referencedJoinProperty = "user_id")
     @OrderBy("date ASC")
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
     /** Used to resolve relations */
     @Generated(hash = 2040040024)
@@ -57,26 +55,27 @@ public class User {
     @Generated(hash = 1507654846)
     private transient UserDao myDao;
 
-    public User() {
-        id = UUID.randomUUID();
-        userId = id.toString();
-
-    }
-
-    public User(UUID id) {
-        this.id = id;
-        userId = id.toString();
-    }
-
-    @Generated(hash = 672590172)
-    public User(Long _id, UUID id, String userId, String username,
-            String password) {
+    @Generated(hash = 1905979962)
+    public User(Long _id, boolean isAdmin, UUID id, String username, String password) {
         this._id = _id;
+        this.isAdmin = isAdmin;
         this.id = id;
-        this.userId = userId;
         this.username = username;
         this.password = password;
     }
+
+    public int getTaskCount(){
+        return tasks.size();
+    }
+
+    public User() {
+        this.id = UUID.randomUUID();
+    }
+
+    public String getPhotoName() {
+        return "IMG_" + id + ".jpg";
+    }
+
 
     public Long get_id() {
         return this._id;
@@ -90,12 +89,8 @@ public class User {
         return this.id;
     }
 
-    public String getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -118,7 +113,7 @@ public class User {
      * To-many relationship, resolved on first access (and after reset).
      * Changes to to-many relations are not persisted, make changes to the target entity.
      */
-    @Generated(hash = 1399478319)
+    @Generated(hash = 1557671211)
     public List<Task> getTasks() {
         if (tasks == null) {
             final DaoSession daoSession = this.daoSession;
@@ -126,7 +121,7 @@ public class User {
                 throw new DaoException("Entity is detached from DAO context");
             }
             TaskDao targetDao = daoSession.getTaskDao();
-            List<Task> tasksNew = targetDao._queryUser_Tasks(userId);
+            List<Task> tasksNew = targetDao._queryUser_Tasks(_id);
             synchronized (this) {
                 if (tasks == null) {
                     tasks = tasksNew;
@@ -178,8 +173,12 @@ public class User {
         myDao.update(this);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public boolean getIsAdmin() {
+        return this.isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     /** called by internal mechanisms, do not call yourself. */
@@ -188,6 +187,5 @@ public class User {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getUserDao() : null;
     }
-
 
 }

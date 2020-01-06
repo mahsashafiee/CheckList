@@ -103,5 +103,4 @@ public class DatePickerFragment extends DialogFragment {
         mDatePicker.init(year, monthOfYear, dayOfMonth, null);
     }
 
-
 }

@@ -32,8 +32,8 @@ public class TimePickerFragment extends DialogFragment {
     public static final String ARGS_TASK_TIME = "crimeTime";
     public static final String EXTRA_TASK_TIME = "crimeHour";
 
-    TimePicker mTimePicker;
-    Date TaskTime;
+    private TimePicker mTimePicker;
+    private Date TaskTime;
     private Calendar mCalendar;
 
     public static TimePickerFragment newInstance(Date date) {
@@ -76,12 +76,7 @@ public class TimePickerFragment extends DialogFragment {
 
         return new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.time_picker_title)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        sendResult();
-                    }
-                })
+                .setPositiveButton(android.R.string.ok, (dialogInterface, i) -> sendResult())
                 .setView(view)
                 .create();
     }

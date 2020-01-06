@@ -15,9 +15,9 @@
     <color name="pink">#BD0062</color>
 
     <color name="TaskColorPink">#FFA5C1</color>
-    <color name="TaskColorBlue">#89CEFF</color>
-    <color name="TaskColorYellow">#FFFFB0</color>
-    <color name="TaskColorGreen">#BDFF8B</color>
+    <color name="TaskColorBlue">#E0FFFF</color>
+    <color name="TaskColorYellow">#FFFFD2</color>
+    <color name="TaskColorGreen">#E3FFCE</color>
     <color name="TaskColorPurple">#D190FF</color>
     <color name="TaskColorOrange">#FCEA8B</color>
 

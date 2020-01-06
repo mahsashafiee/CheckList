@@ -23,47 +23,46 @@
             android:layout_height="wrap_content"
             android:foregroundGravity="center_horizontal">
 
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_marginTop="36dp"
-                android:layout_marginBottom="2dp"
-                android:background="@drawable/plus_sign"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image_sign_up"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginTop="24dp"
+                app:civ_border_width="1dp"
+                app:civ_border_color="#646464"
+                android:src="@drawable/female_placeholder"
                 android:contentDescription="@string/button_sign_up"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_login"
-                app:layout_constraintEnd_toEndOf="@+id/iv_login"
-                app:layout_constraintStart_toEndOf="@+id/iv_login"
-                app:layout_constraintTop_toTopOf="@+id/iv_login" />
-
-            <ImageView
-                android:id="@+id/iv_login"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginTop="32dp"
-                android:background="@drawable/user_login"
-                android:contentDescription="@string/button_sign_up"
-                app:layout_constraintBottom_toTopOf="@+id/tv_login"
+                app:layout_constraintBottom_toTopOf="@+id/tv_sign_up"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="64dp"
+                app:civ_border_color="#646464"
+                app:civ_border_width="1dp"
+                android:layout_marginStart="66dp"
+                app:layout_constraintStart_toStartOf="@id/profile_image_sign_up"
+                app:layout_constraintTop_toTopOf="@id/profile_image_sign_up"
+                android:src="@drawable/ic_add_white_24dp"
+                android:layout_marginLeft="65dp" />
 
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/line"
                 android:layout_width="32dp"
                 android:layout_height="1.5dp"
                 android:background="#333333"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_login"
-                app:layout_constraintEnd_toStartOf="@+id/tv_login"
-                app:layout_constraintTop_toTopOf="@+id/tv_login" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_sign_up"
+                app:layout_constraintEnd_toStartOf="@+id/tv_sign_up"
+                app:layout_constraintTop_toTopOf="@+id/tv_sign_up" />
 
             <TextView
-                android:id="@+id/tv_login"
+                android:id="@+id/tv_sign_up"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="72dp"
                 android:fontFamily="@font/allicia"
                 android:foregroundGravity="center_vertical"
                 android:gravity="center"
@@ -75,23 +74,23 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/iv_login"
+                app:layout_constraintTop_toTopOf="@id/profile_image_sign_up"
                 tools:targetApi="jelly_bean" />
 
             <TextView
                 android:layout_width="32dp"
                 android:layout_height="1.5dp"
                 android:background="#333333"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_login"
-                app:layout_constraintStart_toEndOf="@+id/tv_login"
-                app:layout_constraintTop_toTopOf="@+id/tv_login" />
+                app:layout_constraintBottom_toBottomOf="@+id/tv_sign_up"
+                app:layout_constraintStart_toEndOf="@+id/tv_sign_up"
+                app:layout_constraintTop_toTopOf="@+id/tv_sign_up" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/form_sign_up_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="24dp"
                 android:foregroundGravity="center_horizontal"
                 android:textColor="#ffffff"
@@ -101,15 +100,16 @@
                 app:hintEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_login">
+                app:layout_constraintTop_toBottomOf="@+id/tv_sign_up"
+                app:layout_constraintBottom_toTopOf="@id/form_sign_up_password">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_sign_up_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_edit_text"
-                    android:drawableStart="@drawable/ic_action_person_plus"
-                    android:drawableLeft="@drawable/ic_action_person_plus"
+                    android:drawableStart="@drawable/ic_person_add_black_24dp"
+                    android:drawableLeft="@drawable/ic_person_add_black_24dp"
                     android:hint="@string/username_hint"
                     android:inputType="text"
                     android:paddingStart="8dp"
@@ -135,6 +135,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/form_sign_up_username"
+                app:layout_constraintBottom_toTopOf="@id/form_confirm_password"
                 app:passwordToggleEnabled="true"
                 app:passwordToggleTint="#CD000000">
 
@@ -143,8 +144,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_edit_text"
-                    android:drawableStart="@drawable/ic_action_lock"
-                    android:drawableLeft="@drawable/ic_action_lock"
+                    android:drawableStart="@drawable/ic_lock_black_18dp"
+                    android:drawableLeft="@drawable/ic_lock_black_18dp"
                     android:hint="@string/password_hint"
                     android:inputType="numberPassword"
                     android:paddingStart="8dp"
@@ -176,8 +177,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_edit_text"
-                    android:drawableStart="@drawable/ic_action_lock"
-                    android:drawableLeft="@drawable/ic_action_lock"
+                    android:drawableStart="@drawable/ic_lock_black_18dp"
+                    android:drawableLeft="@drawable/ic_lock_black_18dp"
                     android:hint="@string/confirm_password_hint"
                     android:inputType="numberPassword"
                     android:paddingStart="8dp"
@@ -186,12 +187,26 @@
                     android:textSize="14sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <CheckBox
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/checkbox_isAdmin"
+                app:layout_constraintTop_toBottomOf="@id/form_confirm_password"
+                app:layout_constraintBottom_toTopOf="@id/button_sign_up"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:paddingTop="18dp"
+                android:paddingBottom="18dp"
+                android:text="@string/is_admin"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp"/>
+
+
             <Button
                 android:id="@+id/button_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="20dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/background_button"
                 android:text="@string/button_sign_up"
@@ -200,14 +215,14 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/form_confirm_password" />
+                app:layout_constraintTop_toBottomOf="@+id/checkbox_isAdmin" />
 
             <TextView
                 android:id="@+id/bottom_line"
                 android:layout_width="match_parent"
                 android:layout_height="1.5dp"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="40dp"
                 android:layout_marginEnd="24dp"
                 android:background="#333333"
                 app:layout_constraintBottom_toTopOf="@id/tv_member"
@@ -222,7 +237,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginRight="6dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="24dp"
                 android:text="@string/tv_already_a_member"
                 android:textColor="#333333"
                 android:textSize="15sp"
@@ -237,7 +252,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="24dp"
                 android:layout_marginStart="4dp"
                 android:text="@string/button_login"
                 android:textColor="@color/pink"

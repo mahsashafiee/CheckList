@@ -25,10 +25,10 @@
 
             <ImageView
                 android:id="@+id/iv_login"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="24dp"
                 android:background="@drawable/user_login"
                 android:contentDescription="@string/button_login"
                 android:foregroundGravity="center_horizontal"
@@ -103,12 +103,12 @@
                     android:background="@drawable/background_edit_text"
                     android:paddingTop="11dp"
                     android:paddingBottom="11dp"
-                    android:drawableLeft="@drawable/ic_action_person"
+                    android:drawableLeft="@drawable/ic_person_black_24dp"
                     android:inputType="text"
                     android:textSize="14sp"
                     android:hint="@string/username_hint"
                     android:textColor="#ffffff"
-                    android:drawableStart="@drawable/ic_action_person"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
                     android:paddingStart="8dp" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -138,8 +138,8 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_edit_text"
                     android:hint="@string/password_hint"
-                    android:drawableStart="@drawable/ic_action_lock"
-                    android:drawableLeft="@drawable/ic_action_lock"
+                    android:drawableStart="@drawable/ic_lock_black_18dp"
+                    android:drawableLeft="@drawable/ic_lock_black_18dp"
                     android:paddingLeft="8dp"
                     android:ems="10"
                     android:inputType="numberPassword"

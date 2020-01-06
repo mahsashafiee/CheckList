@@ -1,5 +1,7 @@
 package com.example.checklist.model;
 
+import android.annotation.SuppressLint;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ public enum State {
         this.value = value;
     }
 
+    @SuppressLint("UseSparseArrays")
     private static final Map<Integer, State> intToState = new HashMap<Integer, State>();
 
     private final int value;
@@ -25,7 +28,7 @@ public enum State {
     }
 
     public static State fromInt(int i) {
-        State type = intToState.get(Integer.valueOf(i));
+        State type = intToState.get(i);
         if (type == null)
             return State.TODO;
         return type;

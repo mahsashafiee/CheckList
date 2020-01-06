@@ -32,8 +32,8 @@ import com.google.android.material.textfield.TextInputLayout;
  */
 public class LoginFragment extends Fragment {
 
-    protected static final int REQUEST_CODE_SIGN_UP = 0;
-    protected static final String TAG_SIGN_UP = "signUpFragment";
+    static final int REQUEST_CODE_SIGN_UP = 0;
+    private static final String TAG_SIGN_UP = "signUpFragment";
     private User mUser;
     private Repository mRepository;
     private EditText mUsername, mPassword;
@@ -62,28 +62,21 @@ public class LoginFragment extends Fragment {
 
         initUI(view);
 
-        mCreateAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String username = mUsername.getText().toString();
-                String password = mPassword.getText().toString();
-                SignUpFragment signUpFragment = SignUpFragment.newInstance(username, password);
-                signUpFragment.setTargetFragment(LoginFragment.this, REQUEST_CODE_SIGN_UP);
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction().add(R.id.fragment_container, signUpFragment, TAG_SIGN_UP).commit();
-            }
+        mCreateAccount.setOnClickListener(view12 -> {
+            String username = mUsername.getText().toString();
+            String password = mPassword.getText().toString();
+            SignUpFragment signUpFragment = SignUpFragment.newInstance(username, password);
+            signUpFragment.setTargetFragment(LoginFragment.this, REQUEST_CODE_SIGN_UP);
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction().add(R.id.fragment_container, signUpFragment, TAG_SIGN_UP).commit();
         });
 
-        mLogin.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onClick(View view) {
-                if (validateUsername()) {
-                    if (validatePassword()) {
-                        Intent intent = TaskPagerActivity.newIntent(getActivity(), mUser.getId());
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
+        mLogin.setOnClickListener(view1 -> {
+            if (validateUsername()) {
+                if (validatePassword()) {
+                    Intent intent = TaskPagerActivity.newIntent(getActivity(), mUser.get_id(), true);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -145,7 +138,7 @@ public class LoginFragment extends Fragment {
         mUser = mRepository.getUser(mUsername.getText().toString().trim());
         String password = mPassword.getText().toString().trim();
 
-        if (!password.isEmpty()){
+        if (!password.isEmpty()) {
             password = Hash.MD5(mPassword.getText().toString());
         }
 

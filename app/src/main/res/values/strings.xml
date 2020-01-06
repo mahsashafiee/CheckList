@@ -22,6 +22,7 @@
     <string name="category_TODO">TODO</string>
     <string name="category_DONE">DONE</string>
     <string name="category_DOING">DOING</string>
+    <string name="category_USER">USERS</string>
 
     <string name="task_title_hint">Please enter a title</string>
     <string name="task_description_hint">Please enter your task description</string>
@@ -31,6 +32,16 @@
     <string name="todo_state">ToDo</string>
     <string name="button_edit">Edit</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="is_admin">Admin</string>
+
+    <string name="send_task">Send task via</string>
+    <string name="menu_delete_all">Delete All</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_search">Search</string>
+
+    <plurals name="item_number">
+        <item quantity="one">%1$d task</item>
+        <item quantity="other">%1$d tasks</item>
+    </plurals>
+
 </resources>
