@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:foregroundGravity="center"
+    tools:context=".controller.SignUpFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foregroundGravity="center_horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile_image_edit"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="@string/button_sign_up"
+            android:src="@drawable/female_placeholder"
+            app:civ_border_color="#646464"
+            app:civ_border_width="1dp"
+            app:layout_constraintBottom_toTopOf="@+id/form_edit_username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="66dp"
+            android:layout_marginLeft="65dp"
+            android:layout_marginTop="64dp"
+            android:src="@drawable/ic_add_white_24dp"
+            app:civ_border_color="#646464"
+            app:civ_border_width="1dp"
+            app:layout_constraintStart_toStartOf="@id/profile_image_edit"
+            app:layout_constraintTop_toTopOf="@id/profile_image_edit" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/form_edit_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="24dp"
+            android:foregroundGravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:textColorHint="#fafafa"
+            app:counterEnabled="true"
+            app:counterMaxLength="12"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toTopOf="@id/form_edit_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profile_image_edit">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_edit_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_edit_text"
+                android:drawableStart="@drawable/ic_person_add_black_24dp"
+                android:drawableLeft="@drawable/ic_person_add_black_24dp"
+                android:hint="@string/username_hint"
+                android:inputType="text"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"
+                android:paddingTop="11dp"
+                android:paddingBottom="11dp"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/form_edit_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="24dp"
+            android:foregroundGravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:textColorHint="#fafafa"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toTopOf="@id/form_confirm_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/form_edit_username"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="#CD000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_edit_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_edit_text"
+                android:drawableStart="@drawable/ic_lock_black_18dp"
+                android:drawableLeft="@drawable/ic_lock_black_18dp"
+                android:hint="@string/password_hint"
+                android:inputType="numberPassword"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/form_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="24dp"
+            android:foregroundGravity="center_horizontal"
+            android:inputType="numberPassword"
+            android:textColor="#ffffff"
+            android:textColorHint="#fafafa"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/form_edit_password"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="#CD000000">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_edit_text"
+                android:drawableStart="@drawable/ic_lock_black_18dp"
+                android:drawableLeft="@drawable/ic_lock_black_18dp"
+                android:hint="@string/confirm_password_hint"
+                android:inputType="numberPassword"
+                android:paddingStart="8dp"
+                android:paddingLeft="8dp"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/checkbox_isAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:paddingTop="18dp"
+            android:paddingBottom="18dp"
+            android:text="@string/is_admin"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/form_confirm_password" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

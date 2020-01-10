@@ -1,8 +1,6 @@
 package com.example.checklist.controller.adapter;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,10 +10,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.checklist.R;
+import com.example.checklist.controller.EditUserFragment;
 import com.example.checklist.controller.TaskPagerActivity;
+import com.example.checklist.controller.UserListFragment;
 import com.example.checklist.model.User;
 import com.example.checklist.repository.Repository;
 import com.example.checklist.utils.PictureUtils;
@@ -27,11 +28,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
+    private static final int REQUEST_CODE_EDIT_USER = 2;
+
     private List<User> mUserList;
     private Activity mActivity;
+    private UserListFragment mParentFragment;
 
-    public UserAdapter(Activity activity, List<User> userList) {
+    public UserAdapter(Activity activity, UserListFragment parent, List<User> userList) {
         mUserList = userList;
+        mParentFragment = parent;
         mActivity = activity;
     }
 
@@ -60,7 +65,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
         private User mUser;
         private CircleImageView mProfileImage;
         private TextView mUsername, mTaskCount;
-        private ImageButton mButtonDelete;
+        private ImageButton mButtonDelete, mButtonEdit;
 
         UserHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +73,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
             mTaskCount = itemView.findViewById(R.id.task_numbers);
             mUsername = itemView.findViewById(R.id.username);
             mButtonDelete = itemView.findViewById(R.id.item_user_delete);
+            mButtonEdit = itemView.findViewById(R.id.item_user_edit);
 
             itemView.setOnClickListener(this);
 
@@ -92,6 +98,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
                 AlertDialog alert11 = builder1.create();
                 alert11.show();
+            });
+
+            mButtonEdit.setOnClickListener(v -> {
+                EditUserFragment editUserFragment = EditUserFragment.newInstance(mUser.get_id());
+                editUserFragment.setTargetFragment(mParentFragment, REQUEST_CODE_EDIT_USER);
+                editUserFragment.show(mParentFragment.getFragmentManager(), EditUserFragment.TAG);
             });
         }
 

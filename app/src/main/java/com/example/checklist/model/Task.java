@@ -19,9 +19,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
+
 import org.greenrobot.greendao.annotation.Generated;
 
-@Entity (nameInDb = "task")
+@Entity(nameInDb = "task")
 public class Task {
 
     @Id(autoincrement = true)
@@ -61,7 +62,7 @@ public class Task {
 
     @Generated(hash = 1365658026)
     public Task(Long _id, Long user_id, String title, State state, UUID UUID,
-            Date date, String description) {
+                Date date, String description) {
         this._id = _id;
         this.user_id = user_id;
         this.title = title;
@@ -77,13 +78,13 @@ public class Task {
     }
 
 
-    public String getSimpleDate(){
+    public String getSimpleDate() {
         mFormat = new SimpleDateFormat("dd MMM yyyy");
         return mFormat.format(date);
 
     }
 
-    public String getSimpleTime(){
+    public String getSimpleTime() {
         mFormat = new SimpleDateFormat("hh:mm a");
         return mFormat.format(date);
 

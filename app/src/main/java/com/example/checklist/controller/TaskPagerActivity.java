@@ -32,9 +32,12 @@ public class TaskPagerActivity extends AppCompatActivity {
         return intent;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        getSupportActionBar().setElevation(0);
 
         mID = (Long) getIntent().getSerializableExtra(EXTRA_USER_ID_FROM_LOGIN);
         boolean fromLogin = getIntent().getBooleanExtra(EXTRA_IS_FROM_LOGIN, false);
@@ -67,6 +70,7 @@ public class TaskPagerActivity extends AppCompatActivity {
 
         initUserUI();
 
+
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -94,10 +98,6 @@ public class TaskPagerActivity extends AppCompatActivity {
         TaskPagerAdapter pagerAdapter = new TaskPagerAdapter(getSupportFragmentManager(), this, mID);
         mViewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(mViewPager);
-
-       /* mTabLayout.getTabAt(0).setIcon(R.drawable.ic_more_white_18dp);
-        mTabLayout.getTabAt(1).setIcon(R.drawable.ic_notifications_white_18dp);
-        mTabLayout.getTabAt(2).setIcon(R.drawable.ic_check_circle_white_18dp);*/
 
     }
 

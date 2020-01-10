@@ -64,7 +64,6 @@
             android:drawableLeft="@drawable/ic_text_fields_black_18dp"
             android:hint="@string/task_title"
             android:inputType="text"
-            android:maxLength="12"
             android:padding="12dp"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/textView_taskDescription"
@@ -173,7 +172,8 @@
                 android:buttonTint="@color/colorRadioButton"
                 android:padding="2dp"
                 android:text="@string/todo_state"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                tools:targetApi="lollipop" />
 
             <RadioButton
                 android:id="@+id/radioButton_doing"
@@ -183,7 +183,8 @@
                 android:buttonTint="@color/colorRadioButton"
                 android:padding="2dp"
                 android:text="@string/doing_state"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                tools:targetApi="lollipop" />
 
             <RadioButton
                 android:id="@+id/radioButton_done"
@@ -193,7 +194,8 @@
                 android:buttonTint="@color/colorRadioButton"
                 android:padding="2dp"
                 android:text="@string/done_state"
-                android:textAllCaps="true" />
+                android:textAllCaps="true"
+                tools:targetApi="lollipop" />
 
         </RadioGroup>
 

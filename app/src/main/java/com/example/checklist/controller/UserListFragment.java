@@ -1,8 +1,5 @@
 package com.example.checklist.controller;
 
-
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,7 +25,7 @@ import com.example.checklist.repository.Repository;
  */
 public class UserListFragment extends Fragment {
 
-    private static final String TAG = "UserListFragment";
+    public static final String TAG = "UserListFragment";
     private RecyclerView mRecyclerView;
     private UserAdapter mAdapter;
     private Repository mRepository;
@@ -51,7 +47,6 @@ public class UserListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setHasOptionsMenu(true);
     }
 
@@ -64,8 +59,7 @@ public class UserListFragment extends Fragment {
 
         mRecyclerView = view.findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new UserAdapter(getActivity(), mRepository.getUsers());
-        mRecyclerView.setAdapter(mAdapter);
+        updateUI();
 
         return view;
     }
@@ -74,6 +68,18 @@ public class UserListFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.user_list_menu_option, menu);
+    }
+
+    public void updateUI() {
+        if (isAdded()) {
+            if (mAdapter != null) {
+                mAdapter.setUserList(mRepository.getUsers());
+                mAdapter.notifyDataSetChanged();
+            } else {
+                mAdapter = new UserAdapter(getActivity(), this, mRepository.getUsers());
+                mRecyclerView.setAdapter(mAdapter);
+            }
+        }
     }
 
     @Override

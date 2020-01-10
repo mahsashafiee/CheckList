@@ -28,31 +28,34 @@
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginTop="24dp"
-                app:civ_border_width="1dp"
-                app:civ_border_color="#646464"
-                android:src="@drawable/female_placeholder"
                 android:contentDescription="@string/button_sign_up"
+                android:src="@drawable/female_placeholder"
+                app:civ_border_color="#646464"
+                app:civ_border_width="1dp"
                 app:layout_constraintBottom_toTopOf="@+id/tv_sign_up"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
+                android:layout_marginStart="66dp"
+                android:layout_marginLeft="65dp"
                 android:layout_marginTop="64dp"
+                android:src="@drawable/ic_add_white_24dp"
                 app:civ_border_color="#646464"
                 app:civ_border_width="1dp"
-                android:layout_marginStart="66dp"
                 app:layout_constraintStart_toStartOf="@id/profile_image_sign_up"
-                app:layout_constraintTop_toTopOf="@id/profile_image_sign_up"
-                android:src="@drawable/ic_add_white_24dp"
-                android:layout_marginLeft="65dp" />
+                app:layout_constraintTop_toTopOf="@id/profile_image_sign_up" />
 
 
             <TextView
                 android:id="@+id/line"
                 android:layout_width="32dp"
                 android:layout_height="1.5dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:background="#333333"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_sign_up"
                 app:layout_constraintEnd_toStartOf="@+id/tv_sign_up"
@@ -66,8 +69,6 @@
                 android:fontFamily="@font/allicia"
                 android:foregroundGravity="center_vertical"
                 android:gravity="center"
-                android:paddingLeft="4dp"
-                android:paddingRight="4dp"
                 android:text="@string/button_sign_up"
                 android:textColor="#222222"
                 android:textSize="30sp"
@@ -80,6 +81,8 @@
             <TextView
                 android:layout_width="32dp"
                 android:layout_height="1.5dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:background="#333333"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_sign_up"
                 app:layout_constraintStart_toEndOf="@+id/tv_sign_up"
@@ -98,10 +101,10 @@
                 app:counterEnabled="true"
                 app:counterMaxLength="12"
                 app:hintEnabled="false"
+                app:layout_constraintBottom_toTopOf="@id/form_sign_up_password"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_sign_up"
-                app:layout_constraintBottom_toTopOf="@id/form_sign_up_password">
+                app:layout_constraintTop_toBottomOf="@+id/tv_sign_up">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_sign_up_username"
@@ -132,15 +135,15 @@
                 android:textColor="#ffffff"
                 android:textColorHint="#fafafa"
                 app:hintEnabled="false"
+                app:layout_constraintBottom_toTopOf="@id/form_confirm_password"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/form_sign_up_username"
-                app:layout_constraintBottom_toTopOf="@id/form_confirm_password"
                 app:passwordToggleEnabled="true"
                 app:passwordToggleTint="#CD000000">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_sign_up_password"
+                    android:id="@+id/et_sing_up_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/background_edit_text"
@@ -188,18 +191,18 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <CheckBox
+                android:id="@+id/checkbox_isAdmin"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/checkbox_isAdmin"
-                app:layout_constraintTop_toBottomOf="@id/form_confirm_password"
-                app:layout_constraintBottom_toTopOf="@id/button_sign_up"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="19dp"
+                android:layout_marginEnd="19dp"
                 android:paddingTop="18dp"
                 android:paddingBottom="18dp"
                 android:text="@string/is_admin"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"/>
+                app:layout_constraintBottom_toTopOf="@id/button_sign_up"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/form_confirm_password" />
 
 
             <Button
@@ -251,9 +254,10 @@
                 android:id="@+id/tv_go_to_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="24dp"
-                android:layout_marginStart="4dp"
                 android:text="@string/button_login"
                 android:textColor="@color/pink"
                 android:textSize="15sp"
@@ -262,8 +266,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toRightOf="@id/tv_member"
                 app:layout_constraintStart_toEndOf="@+id/tv_member"
-                app:layout_constraintTop_toBottomOf="@id/bottom_line"
-                android:layout_marginLeft="4dp" />
+                app:layout_constraintTop_toBottomOf="@id/bottom_line" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

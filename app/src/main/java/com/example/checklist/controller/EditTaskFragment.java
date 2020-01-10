@@ -142,15 +142,17 @@ public class EditTaskFragment extends DialogFragment {
             updateUI();
             return true;
         } else if (mTaskTitle.getText().toString().isEmpty() && !(mTaskDescription.getText().toString().isEmpty())) {
-            if (mTaskDescription.getText().toString().contains(" "))
-                mTask.setTitle(mTaskDescription.getText().toString().substring(0, mTaskDescription.getText().toString().indexOf(' ')));
-            mTask.setTitle(mTaskDescription.getText().toString());
+            if (mTaskDescription.getText().toString().length() > 12)
+                mTask.setTitle(mTaskDescription.getText().toString().substring(0, 12));
+            else mTask.setTitle(mTaskDescription.getText().toString());
             mTask.setDescription(mTaskDescription.getText().toString());
             stateChangeListener();
             mTask.setDate(mDate);
             mRepository.updateTask(mTask);
             updateUI();
             return true;
+        } else if (mTaskTitle.getText().toString().length() > 12) {
+            mTaskTitle.setError("Title cannot be more than 12");
         } else
             mTaskDescription.setError("Description cannot be empty!!");
         return false;

@@ -21,9 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.DaoException;
-@Entity (nameInDb = "user")
+
+@Entity(nameInDb = "user")
 public class User {
 
     @Id(autoincrement = true)
@@ -47,11 +49,15 @@ public class User {
     @OrderBy("date ASC")
     private List<Task> tasks = new ArrayList<>();
 
-    /** Used to resolve relations */
+    /**
+     * Used to resolve relations
+     */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /** Used for active entity operations. */
+    /**
+     * Used for active entity operations.
+     */
     @Generated(hash = 1507654846)
     private transient UserDao myDao;
 
@@ -64,7 +70,7 @@ public class User {
         this.password = password;
     }
 
-    public int getTaskCount(){
+    public int getTaskCount() {
         return tasks.size();
     }
 
@@ -131,7 +137,9 @@ public class User {
         return tasks;
     }
 
-    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
+    /**
+     * Resets a to-many relationship, making the next get call to query for a fresh result.
+     */
     @Generated(hash = 668181820)
     public synchronized void resetTasks() {
         tasks = null;
@@ -181,7 +189,9 @@ public class User {
         this.isAdmin = isAdmin;
     }
 
-    /** called by internal mechanisms, do not call yourself. */
+    /**
+     * called by internal mechanisms, do not call yourself.
+     */
     @Generated(hash = 2059241980)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;

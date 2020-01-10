@@ -63,6 +63,10 @@ public class Repository implements Serializable {
         mTaskDao.update(task);
     }
 
+    public void updateUser(User user) {
+        mUserDao.update(user);
+    }
+
     public void deleteTasks(Long id) {
 
         final DeleteQuery<Task> tableDeleteQuery = mDaoSession.queryBuilder(Task.class)

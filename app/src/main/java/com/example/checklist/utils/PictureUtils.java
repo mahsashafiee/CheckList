@@ -15,7 +15,7 @@ public class PictureUtils {
         int srcWidth = options.outWidth;
         int srcHeight = options.outHeight;
 
-        int inSampleSize = Math.min(srcWidth/desWidth, srcHeight/desHeight);
+        int inSampleSize = Math.min(srcWidth / desWidth, srcHeight / desHeight);
 
         options = new BitmapFactory.Options();
         options.inSampleSize = inSampleSize;

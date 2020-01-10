@@ -2,6 +2,7 @@ package com.example.checklist.controller;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -11,19 +12,19 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.checklist.R;
 import com.example.checklist.model.Hash;
@@ -39,72 +40,58 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SignUpFragment extends Fragment {
+public class EditUserFragment extends DialogFragment {
 
-    private static final String ARGS_USERNAME = "args_username";
-    private static final String ARGS_PASSWORD = "args_password";
+    public static final String TAG = "EditUserFragment";
+    private static final String ARGS_USER_ID = "args_user_id";
     private static final String AUTHORITY_FILE_PROVIDER = "com.example.checklist.fileProvider";
-    private static final int PICK_IMAGE = 1;
-    private User mUser = new User();
+    private static final int PICK_IMAGE = 3;
+
+    public static EditUserFragment newInstance(Long userId) {
+
+        Bundle args = new Bundle();
+        args.putLong(ARGS_USER_ID, userId);
+
+        EditUserFragment fragment = new EditUserFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    private User mUser;
     private CircleImageView mProfileImage;
     private Repository mRepository;
     private EditText mUsername, mPassword, mConfirmPass;
     private TextInputLayout mFormUsername, mFormPassword, mFormConfirm;
-    private Button mSignUp;
-    private TextView mLogin;
     private File mPhotoFile;
     private CheckBox mIsAdmin;
     private Bitmap mBitmap;
     private Uri mPhotoUri;
 
-    public static SignUpFragment newInstance(String username, String password) {
 
-        Bundle args = new Bundle();
-
-        SignUpFragment fragment = new SignUpFragment();
-        args.putSerializable(ARGS_USERNAME, username);
-        args.putSerializable(ARGS_PASSWORD, password);
-        fragment.setArguments(args);
-        return fragment;
+    public EditUserFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mUser.setUsername(getArguments().getString(ARGS_USERNAME));
-        mUser.setPassword(getArguments().getString(ARGS_PASSWORD));
-
-
+        mRepository = Repository.getInstance(getActivity());
+        mUser = mRepository.getUser(getArguments().getLong(ARGS_USER_ID));
         mPhotoFile = Repository.getInstance(getContext()).getPhotoFile(mUser);
+
     }
 
-    public SignUpFragment() {
-        // Required empty public constructor
-    }
-
-
+    @NonNull
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_edit_user, null, false);
 
-        initUI(view);
+        initUI(root);
 
-        mSignUp.setOnClickListener(view1 -> {
-
-            if (validateUsername())
-                if (validatePassword())
-                    if (confirmedPassword()) {
-                        sendResult();
-                    }
-
-        });
 
         mProfileImage.setOnClickListener(v -> {
 
@@ -134,21 +121,84 @@ public class SignUpFragment extends Fragment {
             startActivityForResult(chooserIntent, PICK_IMAGE);
         });
 
-        mLogin.setOnClickListener(view12 -> {
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setPositiveButton(R.string.button_edit, null).setNegativeButton(android.R.string.cancel, null)
+                .setView(root)
+                .create();
+        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setOnShowListener(dialog -> {
+            Button buttonP = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+            Button buttonN = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
+            buttonP.setOnClickListener(v -> {
+                if (validateUsername())
+                    if (validatePassword())
+                        if (confirmedPassword()) {
+                            updateUser();
+                            updateUI();
+                            dismiss();
+                        }
+            });
 
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction().remove(SignUpFragment.this).commit();
+            buttonN.setOnClickListener(v -> dismiss());
         });
 
-
-        return view;
+        return alertDialog;
     }
 
+    private void updateUser() {
+
+        mUser.setUsername(mUsername.getText().toString());
+        mUser.setPassword(Hash.MD5(mPassword.getText().toString()));
+        mUser.setIsAdmin(mIsAdmin.isChecked());
+        mRepository.updateUser(mUser);
+        saveProfileImage(mBitmap);
+
+    }
+
+    private void saveProfileImage(Bitmap bitmap) {
+        try {
+
+            if (mBitmap == null || mPhotoFile == null)
+                return;
+
+            FileOutputStream stream = new FileOutputStream(mPhotoFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
+
+            stream.flush();
+            stream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initUI(View root) {
+        mUsername = root.findViewById(R.id.et_edit_username);
+        mPassword = root.findViewById(R.id.et_edit_password);
+        mConfirmPass = root.findViewById(R.id.et_confirm_password);
+        mFormUsername = root.findViewById(R.id.form_edit_username);
+        mFormPassword = root.findViewById(R.id.form_edit_password);
+        mFormConfirm = root.findViewById(R.id.form_confirm_password);
+        mIsAdmin = root.findViewById(R.id.checkbox_isAdmin);
+        mProfileImage = root.findViewById(R.id.profile_image_edit);
+
+        mUsername.setText(mUser.getUsername());
+
+        if (mPhotoFile == null)
+            return;
+        Bitmap bitmap = PictureUtils.getScaledBitmap(mPhotoFile.getAbsolutePath(), getActivity());
+        if (bitmap != null)
+            mProfileImage.setImageBitmap(bitmap);
+    }
+
+    private void updateUI() {
+        if (getTargetFragment() instanceof UserListFragment)
+            ((UserListFragment) getTargetFragment()).updateUI();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
 
@@ -179,8 +229,6 @@ public class SignUpFragment extends Fragment {
 
             }
         }
-
-
     }
 
     private void updatePhotoView() {
@@ -192,55 +240,6 @@ public class SignUpFragment extends Fragment {
         }
     }
 
-    private void saveProfileImage(Bitmap bitmap) {
-        try {
-
-            if (bitmap == null || mPhotoFile == null)
-                return;
-
-            FileOutputStream stream = new FileOutputStream(mPhotoFile);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 75, stream);
-
-            stream.flush();
-            stream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendResult() {
-
-        mUser.setUsername(mUsername.getText().toString());
-        mUser.setPassword(Hash.MD5(mPassword.getText().toString()));
-        mUser.setIsAdmin(mIsAdmin.isChecked());
-        mRepository.insertUser(mUser);
-        saveProfileImage(mBitmap);
-        Intent intent = new Intent();
-        getTargetFragment().onActivityResult(LoginFragment.REQUEST_CODE_SIGN_UP, Activity.RESULT_OK, intent);
-
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        fragmentManager.beginTransaction().remove(SignUpFragment.this).commit();
-    }
-
-    private void initUI(View view) {
-        mUsername = view.findViewById(R.id.et_sign_up_username);
-        mPassword = view.findViewById(R.id.et_sing_up_password);
-        mConfirmPass = view.findViewById(R.id.et_confirm_password);
-        mFormUsername = view.findViewById(R.id.form_sign_up_username);
-        mFormPassword = view.findViewById(R.id.form_sign_up_password);
-        mFormConfirm = view.findViewById(R.id.form_confirm_password);
-        mIsAdmin = view.findViewById(R.id.checkbox_isAdmin);
-        mLogin = view.findViewById(R.id.tv_go_to_login);
-        mProfileImage = view.findViewById(R.id.profile_image_sign_up);
-        mSignUp = view.findViewById(R.id.button_sign_up);
-        mRepository = Repository.getInstance(getActivity().getApplicationContext());
-
-        mUsername.setText(mUser.getUsername());
-        mPassword.setText(mUser.getPassword());
-        mConfirmPass.setText(mUser.getPassword());
-    }
-
     private boolean validateUsername() {
 
         String username = mUsername.getText().toString().trim();
@@ -250,10 +249,6 @@ public class SignUpFragment extends Fragment {
 
         } else if (username.length() > mFormUsername.getCounterMaxLength()) {
             mFormUsername.setError("Username cannot be more than " + mFormUsername.getCounterMaxLength() + " characters!");
-            return false;
-
-        } else if (mRepository.getUser(username) != null) {
-            mFormUsername.setError("Username not available, Choose another!");
             return false;
 
         } else
@@ -290,6 +285,4 @@ public class SignUpFragment extends Fragment {
         return true;
 
     }
-
-
 }
