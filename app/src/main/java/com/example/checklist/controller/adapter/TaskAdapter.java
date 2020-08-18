@@ -40,21 +40,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     private List<Task> mTasksFull;
     private Context mContext;
     private TaskListFragment mParentFragment;
+    private TaskUpdateListener mListener;
 
     public TaskAdapter(Context context, TaskListFragment fragment, List<Task> tasks) {
         mContext = context;
         mParentFragment = fragment;
         mTasks = tasks;
-        if (tasks != null) {
-            mTasksFull = new ArrayList<>(tasks);
-        }
+        mTasksFull = new ArrayList<>(tasks);
+        mListener= ((TaskUpdateListener) fragment);
 
+    }
+
+    public interface TaskUpdateListener {
+        void onTaskUpdate(Long id, State state);
     }
 
     public void setTasks(List<Task> tasks) {
         mTasks = tasks;
-        if (tasks != null)
-            mTasksFull = new ArrayList<>(tasks);
+        mTasksFull = new ArrayList<>(tasks);
         notifyDataSetChanged();
     }
 
@@ -151,7 +154,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                         "Yes",
                         (dialog, id) -> {
                             Repository.getInstance(mContext.getApplicationContext()).deleteTask(mTask.getUUID());
-                            mParentFragment.updateUI();
+                            mListener.onTaskUpdate(mTask.getUser_id(), mTask.getState());
                             dialog.cancel();
                         });
 

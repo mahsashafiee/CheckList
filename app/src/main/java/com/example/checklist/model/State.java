@@ -13,7 +13,7 @@ public enum State {
     }
 
     @SuppressLint("UseSparseArrays")
-    private static final Map<Integer, State> intToState = new HashMap<Integer, State>();
+    private static final Map<Integer, State> intToState = new HashMap<>();
 
     private final int value;
 

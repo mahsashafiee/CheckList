@@ -4,8 +4,6 @@ package com.example.checklist.controller;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,7 +39,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class TaskListFragment extends Fragment {
+public class TaskListFragment extends Fragment implements TaskAdapter.TaskUpdateListener {
 
     private static final int REQUEST_CODE_TASK_DETAIL = 0;
     private static final String TAG_TASK_DETAIL = "taskDetail";
@@ -161,7 +159,7 @@ public class TaskListFragment extends Fragment {
                         "Yes",
                         (dialog, id) -> {
                             mRepository.deleteTasks(mID);
-                            updateUI();
+                            onTaskUpdate(mID, mState);
                             dialog.cancel();
                         });
 
@@ -178,14 +176,13 @@ public class TaskListFragment extends Fragment {
         }
     }
 
-    public void updateUI() {
-
+    @Override
+    public void onTaskUpdate(Long id, State state) {
+        mTasks = Repository.getInstance(getContext()).getTasks(id, state);
         if (isAdded()) {
             if (mAdapter != null) {
-                mTasks = mRepository.getTasks(mID, mState);
                 mAdapter.setTasks(mTasks);
                 mAdapter.notifyDataSetChanged();
-
             } else {
                 mAdapter = new TaskAdapter(getActivity(), this, mTasks);
                 mRecyclerView.setAdapter(mAdapter);

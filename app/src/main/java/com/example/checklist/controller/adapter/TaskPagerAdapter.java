@@ -45,11 +45,13 @@ public class TaskPagerAdapter extends FragmentStatePagerAdapter {
         return mListFragments.get(position);
 
     }
+/*
 
     @Override
     public int getItemPosition(@NonNull Object object) {
         return POSITION_NONE;
     }
+*/
 
     @Override
     public int getCount() {

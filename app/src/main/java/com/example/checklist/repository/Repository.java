@@ -16,6 +16,7 @@ import org.greenrobot.greendao.query.DeleteQuery;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -106,9 +107,10 @@ public class Repository implements Serializable {
     }
 
     public List<Task> getTasks(Long id, State state) {
-        return mTaskDao.queryBuilder()
+        List<Task> tasks = mTaskDao.queryBuilder()
                 .where(TaskDao.Properties.User_id.eq(id), TaskDao.Properties.State.eq(state.getValue()))
                 .list();
+        return tasks != null ? tasks : new ArrayList<Task>();
     }
 
     public List<Task> getTasks(State state) {

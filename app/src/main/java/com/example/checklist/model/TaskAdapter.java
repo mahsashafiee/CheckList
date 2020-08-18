@@ -2,7 +2,6 @@ package com.example.checklist.model;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
@@ -144,7 +143,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                         "Yes",
                         (dialog, id) -> {
                             Repository.getInstance(mContext.getApplicationContext()).deleteTask(mTask.getUUID());
-                            mParentFragment.updateUI();
+                            mParentFragment.onTaskUpdate(mTask.getUser_id(), mTask.getState());
                             dialog.cancel();
                         });
 

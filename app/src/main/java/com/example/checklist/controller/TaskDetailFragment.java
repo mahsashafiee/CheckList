@@ -3,7 +3,6 @@ package com.example.checklist.controller;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -155,7 +154,7 @@ public class TaskDetailFragment extends DialogFragment {
 
     private void updateUI() {
         if (getTargetFragment() instanceof TaskListFragment)
-            ((TaskListFragment) getTargetFragment()).updateUI();
+            ((TaskListFragment) getTargetFragment()).onTaskUpdate(mTask.getUser_id(), mTask.getState());
     }
 
     private void initUI(View view) {

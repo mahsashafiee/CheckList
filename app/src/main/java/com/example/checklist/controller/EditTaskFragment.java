@@ -3,7 +3,6 @@ package com.example.checklist.controller;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -51,6 +50,7 @@ public class EditTaskFragment extends DialogFragment {
     private Repository mRepository;
     private RadioButton mStateDone, mStateDoing, mStateToDo;
     private RadioGroup radioGroup;
+    private State mPreviousState;
 
 
     public static EditTaskFragment newInstance(UUID taskId) {
@@ -73,6 +73,7 @@ public class EditTaskFragment extends DialogFragment {
         mTask = mRepository.getTask(taskId);
         mDate = mTask.getDate();
         mTime = mTask.getDate();
+        mPreviousState = mTask.getState();
 
         if (savedInstanceState != null) {
             mDate = (Date) savedInstanceState.getSerializable(INSTANCE_TASK_DATE);
@@ -131,8 +132,6 @@ public class EditTaskFragment extends DialogFragment {
     }
 
     private boolean TaskValidation() {
-
-
         if (!mTaskTitle.getText().toString().isEmpty() && !mTaskDescription.getText().toString().isEmpty()) {
             mTask.setDescription(mTaskDescription.getText().toString());
             mTask.setTitle(mTaskTitle.getText().toString());
@@ -175,7 +174,7 @@ public class EditTaskFragment extends DialogFragment {
 
     private void updateUI() {
         if (getTargetFragment() instanceof TaskListFragment)
-            ((TaskListFragment) getTargetFragment()).updateUI();
+            ((TaskListFragment) getTargetFragment()).onTaskUpdate(mTask.getUser_id(), mPreviousState);
     }
 
     private void initUI(View view) {
