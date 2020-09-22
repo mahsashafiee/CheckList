@@ -12,6 +12,8 @@ This is an app for managing your tasks.
 
 ##### Here are screenshots of the app:
 
-![Login](screenshots/login.png)   
-![Sign Up](screenshots/signup.png)   
-![Task List](screenshots/tasklist.png)
+![Login](screenshots/login.png)         ![Sign Up](screenshots/signup.png)          ![Task List](screenshots/tasklist.png)
+
+![Login](screenshots/add_task.png)         ![Sign Up](screenshots/date.png)          ![Task List](screenshots/time.png)
+
+![Login](screenshots/edit_task.png)         ![Sign Up](screenshots/admin_login.png)          ![Task List](screenshots/edit_user.png)
