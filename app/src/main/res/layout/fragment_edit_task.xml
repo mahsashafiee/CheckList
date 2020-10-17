@@ -51,7 +51,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/form_Title"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gradient"></TextView>
+            app:layout_constraintTop_toBottomOf="@id/gradient" />
 
         <EditText
             android:id="@+id/form_Title"
@@ -63,13 +63,14 @@
             android:drawableStart="@drawable/ic_text_fields_black_18dp"
             android:drawableLeft="@drawable/ic_text_fields_black_18dp"
             android:hint="@string/task_title"
+            android:drawablePadding="4dp"
             android:inputType="text"
             android:padding="12dp"
             android:textSize="14sp"
             app:layout_constraintBottom_toTopOf="@id/textView_taskDescription"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView_taskTitle"></EditText>
+            app:layout_constraintTop_toBottomOf="@id/textView_taskTitle" />
 
         <TextView
             android:id="@+id/textView_taskDescription"
@@ -84,7 +85,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/form_taskDescription"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/form_Title"></TextView>
+            app:layout_constraintTop_toBottomOf="@id/form_Title" />
 
         <EditText
             android:id="@+id/form_taskDescription"
@@ -97,6 +98,7 @@
             android:drawableLeft="@drawable/ic_short_text_black_18dp"
             android:gravity="top|left"
             android:hint="@string/task_description"
+            android:drawablePadding="4dp"
             android:inputType="textCapSentences|textNoSuggestions|textMultiLine"
             android:lines="3"
             android:maxLines="3"
@@ -107,7 +109,7 @@
             app:layout_constraintBottom_toTopOf="@id/edit_task_button_date"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView_taskDescription"></EditText>
+            app:layout_constraintTop_toBottomOf="@id/textView_taskDescription" />
 
         <Button
             android:id="@+id/edit_task_button_date"

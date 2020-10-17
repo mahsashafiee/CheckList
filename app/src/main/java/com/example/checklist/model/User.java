@@ -11,6 +11,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.JoinProperty;
+import org.greenrobot.greendao.annotation.Keep;
 import org.greenrobot.greendao.annotation.OrderBy;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.ToMany;
@@ -49,15 +50,11 @@ public class User {
     @OrderBy("date ASC")
     private List<Task> tasks = new ArrayList<>();
 
-    /**
-     * Used to resolve relations
-     */
+    /** Used to resolve relations */
     @Generated(hash = 2040040024)
     private transient DaoSession daoSession;
 
-    /**
-     * Used for active entity operations.
-     */
+    /** Used for active entity operations. */
     @Generated(hash = 1507654846)
     private transient UserDao myDao;
 
@@ -70,10 +67,7 @@ public class User {
         this.password = password;
     }
 
-    public int getTaskCount() {
-        return tasks.size();
-    }
-
+    @Keep
     public User() {
         this.id = UUID.randomUUID();
     }
@@ -89,6 +83,14 @@ public class User {
 
     public void set_id(Long _id) {
         this._id = _id;
+    }
+
+    public boolean getIsAdmin() {
+        return this.isAdmin;
+    }
+
+    public void setIsAdmin(boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
     public UUID getId() {
@@ -137,9 +139,7 @@ public class User {
         return tasks;
     }
 
-    /**
-     * Resets a to-many relationship, making the next get call to query for a fresh result.
-     */
+    /** Resets a to-many relationship, making the next get call to query for a fresh result. */
     @Generated(hash = 668181820)
     public synchronized void resetTasks() {
         tasks = null;
@@ -181,19 +181,12 @@ public class User {
         myDao.update(this);
     }
 
-    public boolean getIsAdmin() {
-        return this.isAdmin;
-    }
-
-    public void setIsAdmin(boolean isAdmin) {
-        this.isAdmin = isAdmin;
-    }
-
     /** called by internal mechanisms, do not call yourself. */
     @Generated(hash = 2059241980)
     public void __setDaoSession(DaoSession daoSession) {
         this.daoSession = daoSession;
         myDao = daoSession != null ? daoSession.getUserDao() : null;
     }
+
 
 }

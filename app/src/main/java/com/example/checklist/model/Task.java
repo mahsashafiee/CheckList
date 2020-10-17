@@ -62,7 +62,7 @@ public class Task {
 
     @Generated(hash = 1365658026)
     public Task(Long _id, Long user_id, String title, State state, UUID UUID,
-                Date date, String description) {
+            Date date, String description) {
         this._id = _id;
         this.user_id = user_id;
         this.title = title;

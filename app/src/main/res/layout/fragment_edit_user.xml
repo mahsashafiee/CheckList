@@ -67,6 +67,7 @@
                 android:drawableLeft="@drawable/ic_person_add_black_24dp"
                 android:hint="@string/username_hint"
                 android:inputType="text"
+                android:drawablePadding="4dp"
                 android:paddingStart="8dp"
                 android:paddingLeft="8dp"
                 android:paddingTop="11dp"
@@ -103,6 +104,7 @@
                 android:drawableLeft="@drawable/ic_lock_black_18dp"
                 android:hint="@string/password_hint"
                 android:inputType="numberPassword"
+                android:drawablePadding="4dp"
                 android:paddingStart="8dp"
                 android:paddingLeft="8dp"
                 android:textColor="#ffffff"
@@ -138,6 +140,7 @@
                 android:inputType="numberPassword"
                 android:paddingStart="8dp"
                 android:paddingLeft="8dp"
+                android:drawablePadding="4dp"
                 android:textColor="#ffffff"
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>

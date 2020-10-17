@@ -38,14 +38,16 @@
         android:id="@+id/task_list_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="2dp" />
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:paddingBottom="4dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="4dp"
+        android:layout_margin="10dp"
         android:contentDescription="@string/add"
         android:src="@drawable/ic_add_white_24dp"
         app:layout_anchor="@id/task_list_recyclerView"

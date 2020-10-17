@@ -47,7 +47,7 @@
                 android:foregroundGravity="center_horizontal"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_login"
                 app:layout_constraintEnd_toStartOf="@+id/tv_login"
-                app:layout_constraintTop_toTopOf="@+id/tv_login"></TextView>
+                app:layout_constraintTop_toTopOf="@+id/tv_login" />
 
             <TextView
                 android:id="@+id/tv_login"
@@ -102,6 +102,7 @@
                     android:background="@drawable/background_edit_text"
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:drawableLeft="@drawable/ic_person_black_24dp"
+                    android:drawablePadding="4dp"
                     android:hint="@string/username_hint"
                     android:inputType="text"
                     android:paddingStart="8dp"
@@ -139,6 +140,7 @@
                     android:background="@drawable/background_edit_text"
                     android:drawableStart="@drawable/ic_lock_black_18dp"
                     android:drawableLeft="@drawable/ic_lock_black_18dp"
+                    android:drawablePadding="4dp"
                     android:ems="10"
                     android:hint="@string/password_hint"
                     android:inputType="numberPassword"
